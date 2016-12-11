@@ -8,6 +8,67 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="semproject.nevent.SignUp">
 
+    <EditText
+        android:id="@+id/username"
+        android:hint="Username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignParentTop="true" />
+
+    <EditText
+        android:id="@+id/email"
+        android:hint="E-mail"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:layout_below="@+id/username"
+        android:layout_alignStart="@+id/username"
+        android:layout_alignLeft="@+id/username"
+        android:layout_marginTop="11dp"
+        android:layout_alignEnd="@+id/username"
+        android:layout_alignRight="@+id/username"/>
+
+    <EditText
+        android:id="@+id/password"
+        android:hint="Password"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_below="@+id/email"
+        android:layout_alignStart="@+id/email"
+        android:layout_alignLeft="@+id/email"
+        android:layout_marginTop="11dp"
+        android:layout_alignEnd="@+id/email"
+        android:layout_alignRight="@+id/email"/>
+    <EditText
+        android:id="@+id/confpassword"
+        android:hint="Confirm Password"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_below="@+id/password"
+        android:layout_alignStart="@+id/password"
+        android:layout_alignLeft="@+id/password"
+        android:layout_marginTop="11dp"
+        android:layout_alignEnd="@+id/password"
+        android:layout_alignRight="@+id/password"/>
+    <Button
+        android:text="Sign Up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/confpassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:id="@+id/button2"
+        android:elevation="24dp"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:onClick="signup"/>
 </RelativeLayout>

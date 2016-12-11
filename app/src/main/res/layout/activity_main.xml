@@ -92,5 +92,5 @@
         android:id="@+id/textView3"
         android:textSize="20sp"
         android:textStyle="normal|bold"
-        android:onClick="signup"/>
+        android:onClick="register"/>
 </RelativeLayout>
