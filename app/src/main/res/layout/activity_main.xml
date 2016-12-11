@@ -11,7 +11,86 @@
     tools:context="semproject.nevent.MainActivity">
 
     <TextView
+        android:text="N EVENT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Updated Name" />
+        android:id="@+id/my_text"
+        android:typeface="normal"
+        android:textSize="50sp"
+        android:lineSpacingExtra="10sp"
+        android:textAllCaps="true"
+        android:textStyle="normal|bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="All your events simplified!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_subtext"
+        android:textSize="18sp"
+        android:layout_below="@+id/my_text"
+        android:layout_alignStart="@+id/my_text"
+        android:layout_alignLeft="@+id/my_text"/>
+
+
+    <EditText
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="102dp"
+        android:id="@+id/editText"
+        android:hint="Username"
+        android:layout_below="@+id/my_subtext"
+        android:layout_alignStart="@+id/my_text"
+        android:layout_alignLeft="@+id/my_text"/>
+
+    <EditText
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_below="@+id/editText"
+        android:layout_alignStart="@+id/editText"
+        android:layout_alignLeft="@+id/editText"
+        android:layout_marginTop="11dp"
+        android:id="@+id/editText2"
+        android:hint="Password"
+        android:layout_alignEnd="@+id/editText"
+        android:layout_alignRight="@+id/editText"/>
+
+    <Button
+        android:text="SiGn In"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:id="@+id/button2"
+        android:elevation="24dp"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:onClick="signin"/>
+
+    <TextView
+        android:text="OR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:id="@+id/textView2"
+        android:textSize="20sp" />
+
+    <TextView
+        android:text="REGISTER FOR FREE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:id="@+id/textView3"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:onClick="signup"/>
 </RelativeLayout>
