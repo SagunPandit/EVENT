@@ -8,8 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/wall"
     tools:context="semproject.nevent.MainActivity">
-
     <TextView
         android:text="N EVENT"
         android:layout_width="wrap_content"
@@ -22,6 +22,7 @@
         android:textStyle="normal|bold"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
 
     <TextView
         android:text="All your events simplified!"
@@ -37,18 +38,6 @@
     <EditText
         android:layout_width="220dp"
         android:layout_height="40dp"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_marginTop="102dp"
-        android:id="@+id/editText"
-        android:hint="Username"
-        android:layout_below="@+id/my_subtext"
-        android:layout_alignStart="@+id/my_text"
-        android:layout_alignLeft="@+id/my_text"/>
-
-    <EditText
-        android:layout_width="220dp"
-        android:layout_height="40dp"
         android:inputType="textPassword"
         android:ems="10"
         android:layout_below="@+id/editText"
@@ -58,19 +47,8 @@
         android:id="@+id/editText2"
         android:hint="Password"
         android:layout_alignEnd="@+id/editText"
-        android:layout_alignRight="@+id/editText"/>
-
-    <Button
-        android:text="SiGn In"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:id="@+id/button2"
-        android:elevation="24dp"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:onClick="signin"/>
+        android:layout_alignRight="@+id/editText"
+        android:background="@drawable/shape"/>
 
     <TextView
         android:text="OR"
@@ -93,4 +71,30 @@
         android:textSize="20sp"
         android:textStyle="normal|bold"
         android:onClick="register"/>
+
+    <Button
+        android:text="SiGn In"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/button2"
+        android:elevation="24dp"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:onClick="signin"
+        android:layout_below="@+id/editText2"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/shape2"/>
+
+    <EditText
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="105dp"
+        android:id="@+id/editText"
+        android:hint="Username"
+        android:background="@drawable/shape"
+        android:layout_below="@+id/my_subtext"
+        android:layout_alignLeft="@+id/my_subtext"
+        android:layout_alignStart="@+id/my_subtext" />
 </RelativeLayout>

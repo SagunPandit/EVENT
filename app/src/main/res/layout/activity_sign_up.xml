@@ -9,7 +9,22 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@drawable/wall"
     tools:context="semproject.nevent.SignUp">
+
+    <TextView
+        android:text="Sign Up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:typeface="normal"
+        android:textSize="50sp"
+        android:lineSpacingExtra="10sp"
+        android:textAllCaps="true"
+        android:textStyle="normal|bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="40dp"/>
 
     <EditText
         android:id="@+id/username"
@@ -18,7 +33,8 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:layout_alignParentTop="true" />
+        android:layout_below="@id/title"
+        android:background="@drawable/shape"/>
 
     <EditText
         android:id="@+id/email"
@@ -32,7 +48,8 @@
         android:layout_alignLeft="@+id/username"
         android:layout_marginTop="11dp"
         android:layout_alignEnd="@+id/username"
-        android:layout_alignRight="@+id/username"/>
+        android:layout_alignRight="@+id/username"
+        android:background="@drawable/shape"/>
 
     <EditText
         android:id="@+id/password"
@@ -46,7 +63,8 @@
         android:layout_alignLeft="@+id/email"
         android:layout_marginTop="11dp"
         android:layout_alignEnd="@+id/email"
-        android:layout_alignRight="@+id/email"/>
+        android:layout_alignRight="@+id/email"
+        android:background="@drawable/shape"/>
     <EditText
         android:id="@+id/confpassword"
         android:hint="Confirm Password"
@@ -59,9 +77,11 @@
         android:layout_alignLeft="@+id/password"
         android:layout_marginTop="11dp"
         android:layout_alignEnd="@+id/password"
-        android:layout_alignRight="@+id/password"/>
+        android:layout_alignRight="@+id/password"
+        android:background="@drawable/shape"/>
     <Button
         android:text="Sign Up"
+        android:background="@drawable/shape2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/confpassword"
@@ -70,5 +90,6 @@
         android:id="@+id/button2"
         android:elevation="24dp"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:onClick="signup"/>
+        android:onClick="signup"
+        android:layout_margin="30dp"/>
 </RelativeLayout>
