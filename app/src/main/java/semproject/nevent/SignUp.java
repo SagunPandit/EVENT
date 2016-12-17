@@ -19,6 +19,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+
+import static java.lang.System.exit;
+
 
 public class SignUp extends AppCompatActivity {
     final String STRING_TAG = "SignUp";
@@ -56,44 +60,24 @@ public class SignUp extends AppCompatActivity {
                     Toast toast;
                     TextView v;
                     try {
+                        Log.e(STRING_TAG, "Try");
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean success = jsonResponse.getBoolean("success");
-                        /* int success = jsonResponse.getInt("success");
-                           Log.e(STRING_TAG,Integer.toString(success));
-                           switch (success){
-                            case 0:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
-                                builder.setMessage("Register Failed")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
-                                break;
-                            case 1:
-                                Log.e(STRING_TAG, "Success");
+                        Log.e(STRING_TAG, Boolean.toString(success));
+                        if (success) {
+                            Log.e(STRING_TAG, "Successs "+Boolean.toString(jsonResponse.getBoolean("emailerror")));
+                            if(jsonResponse.getBoolean("emailerror")){
+                                toastMesg = "Enter valid email format";
+                                toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+                                v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                if (v != null) v.setGravity(Gravity.CENTER);
+                                toast.show();
+                            }
+                            else {
                                 Intent intent = new Intent(SignUp.this, MainActivity.class);
                                 startActivity(intent);
-                                break;
-                            case 2:
-                                toastMesg = "This email is already registered";
-                                toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
-                                v = (TextView) toast.getView().findViewById(android.R.id.message);
-                                if (v != null) v.setGravity(Gravity.CENTER);
-                                toast.show();
-                                break;
-                            case 3:
-                                toastMesg = "This username is already taken.";
-                                toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
-                                v = (TextView) toast.getView().findViewById(android.R.id.message);
-                                if (v != null) v.setGravity(Gravity.CENTER);
-                                toast.show();
-                                break;
-                            default:
-                                break;
-                        }*/
-                        if (success) {
-                            Log.e(STRING_TAG, "Success");
-                            Intent intent = new Intent(SignUp.this, MainActivity.class);
-                            startActivity(intent);
+                            }
+
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
                             builder.setMessage("Register Failed")
@@ -107,8 +91,8 @@ public class SignUp extends AppCompatActivity {
                 }
             };
             RegisterRequest registerRequest = new RegisterRequest(fusername, femail, fpassword, responseListener);
-            RequestQueue queue = Volley.newRequestQueue(SignUp.this);
-            queue.add(registerRequest);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(registerRequest); //automatically start the string request on the queue
         }
 
     }

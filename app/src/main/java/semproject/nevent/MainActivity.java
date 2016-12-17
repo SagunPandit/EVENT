@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-
+                    Log.e(STRING_TAG,"try");
                     JSONObject jsonObject=new JSONObject(response);
                     boolean success = jsonObject.getBoolean("success");
                     if(success){
