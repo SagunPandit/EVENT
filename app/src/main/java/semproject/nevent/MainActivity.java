@@ -38,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-
+                    Log.e(STRING_TAG,"try");
                     JSONObject jsonObject=new JSONObject(response);
+                    Log.e(STRING_TAG,jsonObject.getString("inside"));
                     boolean success = jsonObject.getBoolean("success");
                     if(success){
                         String username= jsonObject.getString("username");

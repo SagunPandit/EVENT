@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class LoginRequest extends StringRequest {
     final String STRING_TAG= "LoginRequest";
-    private static final String LOGIN_REQUEST_URL = "https://eventmanager.000webhostapp.com/Login.php";
+    private static final String LOGIN_REQUEST_URL = "http://avashadhikari.com.np/Login.php";
     private Map<String, String> params;
 
     public LoginRequest(String username, String password, Response.Listener<String> listener) {

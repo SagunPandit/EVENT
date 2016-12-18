@@ -19,6 +19,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+
+import static java.lang.System.exit;
+
 
 public class SignUp extends AppCompatActivity {
     final String STRING_TAG = "SignUp";
@@ -56,11 +60,12 @@ public class SignUp extends AppCompatActivity {
                     Toast toast;
                     TextView v;
                     try {
+                        Log.e(STRING_TAG, "Try");
                         JSONObject jsonResponse = new JSONObject(response);
-                        boolean success = jsonResponse.getBoolean("success");
-                        /* int success = jsonResponse.getInt("success");
-                           Log.e(STRING_TAG,Integer.toString(success));
-                           switch (success){
+
+                        /*int success = jsonResponse.getInt("success");
+                        Log.e(STRING_TAG,Integer.toString(success));
+                        switch (success) {
                             case 0:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
                                 builder.setMessage("Register Failed")
@@ -90,10 +95,23 @@ public class SignUp extends AppCompatActivity {
                             default:
                                 break;
                         }*/
+                        boolean success = jsonResponse.getBoolean("success");
+
                         if (success) {
-                            Log.e(STRING_TAG, "Success");
-                            Intent intent = new Intent(SignUp.this, MainActivity.class);
-                            startActivity(intent);
+
+                            if(jsonResponse.getBoolean("emailerror")){
+                                toastMesg = "Enter valid email format";
+                                toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+                                v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                if (v != null) v.setGravity(Gravity.CENTER);
+                                toast.show();
+                            }
+                            else {
+
+                                Intent intent = new Intent(SignUp.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
                             builder.setMessage("Register Failed")
@@ -101,16 +119,16 @@ public class SignUp extends AppCompatActivity {
                                     .create()
                                     .show();
                         }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             };
             RegisterRequest registerRequest = new RegisterRequest(fusername, femail, fpassword, responseListener);
-            RequestQueue queue = Volley.newRequestQueue(SignUp.this);
-            queue.add(registerRequest);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(registerRequest); //automatically start the string request on the queue
         }
 
     }
 }
-
