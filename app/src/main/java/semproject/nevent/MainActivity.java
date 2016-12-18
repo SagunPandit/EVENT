@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject=new JSONObject(response);
                     Log.e(STRING_TAG,jsonObject.getString("inside"));
                     boolean success = jsonObject.getBoolean("success");
+                    Log.e(STRING_TAG,jsonObject.getString("inside"));
                     if(success){
+
                         String username= jsonObject.getString("username");
                         String email= jsonObject.getString("email");
                         Intent intent= new Intent(MainActivity.this,HomePage.class);
