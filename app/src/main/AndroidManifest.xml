@@ -29,6 +29,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".HomePage"
+            android:label="nEVENT"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
