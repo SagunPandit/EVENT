@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_sign_in"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="semproject.nevent.SignIn">
+    <TextView
+        android:text="N EVENT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_main"
+        android:typeface="normal"
+        android:textSize="50sp"
+        android:lineSpacingExtra="10sp"
+        android:textAllCaps="true"
+        android:textStyle="normal|bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+
+    <TextView
+        android:text="All your events simplified!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_subtext"
+        android:textSize="18sp"
+        android:layout_below="@id/title_main"
+        android:layout_alignStart="@id/title_main"
+        android:layout_alignLeft="@id/title_main"/>
+
+    <EditText
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="105dp"
+        android:id="@+id/username_main"
+        android:hint="Username"
+        android:background="@drawable/shape"
+        android:layout_below="@id/title_subtext"
+        android:layout_alignLeft="@id/title_subtext"
+        android:layout_alignStart="@id/title_subtext" />
+
+    <EditText
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_below="@id/username_main"
+        android:layout_alignStart="@id/username_main"
+        android:layout_alignLeft="@id/username_main"
+        android:layout_marginTop="11dp"
+        android:id="@+id/password_main"
+        android:hint="Password"
+        android:layout_alignEnd="@id/username_main"
+        android:layout_alignRight="@id/username_main"
+        android:background="@drawable/shape"/>
+
+    <Button
+        android:text="SiGn In"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/button_signin"
+        android:elevation="24dp"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:onClick="signin"
+        android:layout_below="@+id/password_main"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/shape2"/>
+
+    <TextView
+        android:text="OR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_signin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:id="@+id/or_main"
+        android:textSize="20sp" />
+
+    <TextView
+        android:text="REGISTER FOR FREE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/or_main"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:id="@+id/text_signup"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:onClick="register"/>
+
+
+
+</RelativeLayout>
