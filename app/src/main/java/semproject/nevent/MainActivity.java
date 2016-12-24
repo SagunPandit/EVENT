@@ -33,9 +33,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sharedpreferences = getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
-        String username= sharedpreferences.getString("username",NULL);
-        String password= sharedpreferences.getString("password",NULL);
+        String username= sharedpreferences.getString("username","");
+        String password= sharedpreferences.getString("password","");
+        Log.e(STRING_TAG,"Check");
         if(username.isEmpty()|| password.isEmpty()){
+            Log.e(STRING_TAG,"splash");
             Intent intent= new Intent(MainActivity.this,SignIn.class);
             startActivity(intent);
             finish();
