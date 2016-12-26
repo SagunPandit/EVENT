@@ -36,7 +36,10 @@
         <activity
             android:name=".SignIn"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Upload"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

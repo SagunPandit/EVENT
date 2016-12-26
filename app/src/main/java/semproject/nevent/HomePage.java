@@ -20,11 +20,15 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     NavigationView navigationView=null;
     Toolbar toolbar=null;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
 
         // Set the fragments
         Trending trending=new Trending();
@@ -52,7 +56,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
+
+
 
 
     @Override
@@ -69,6 +77,15 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         startActivity(i);
 
     }
+
+    public void addevents(View view) {
+        Intent i=new Intent(this, Upload.class);
+        i.putExtra("username",username);
+        startActivity(i);
+
+    }
+
+
 
 
 

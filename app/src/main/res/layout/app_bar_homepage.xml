@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:background="@android:color/background_dark"
-    tools:context="semproject.nevent.Homepage">
+    tools:context="semproject.nevent.HomePage">
 
         <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,42 +17,68 @@
         app:popupTheme="@style/PopupOverlay"
             android:elevation="14dp" />
 
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/buttons"
+    android:layout_below="@+id/toolbar">
+
+
     <Button
         android:text="Nearby Events"
         android:textColor="@android:color/background_light"
-        android:layout_width="wrap_content"
+        android:layout_width="0sp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:id="@+id/button4"
         android:layout_below="@+id/toolbar"
-        android:layout_toRightOf="@+id/button5"
-        android:layout_toEndOf="@+id/button5"
-        android:layout_marginLeft="55dp"
-        android:layout_marginStart="55dp"
         android:background="@android:color/background_dark" />
 
+
+    <Button
+        android:text="Trending"
+        android:textColor="@android:color/background_light"
+        android:layout_width="0sp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:id="@+id/button5"
+        android:background="@android:color/background_dark"
+        android:layout_below="@+id/toolbar"
+        android:onClick="gopage"/>
+
+    <Button
+        android:text="About"
+        android:textColor="@android:color/background_light"
+        android:layout_width="0sp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:id="@+id/button6"
+        android:background="@android:color/background_dark"
+        android:onClick="about"/>
+
+</LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="110dp">
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/buttons">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabButton"
+            android:layout_margin="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:onClick="addevents"
+            app:srcCompat="@android:drawable/ic_menu_upload"/>
     </FrameLayout>
 
-    <Button
-        android:text="Trending"
-        android:textColor="@android:color/background_light"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="52dp"
-        android:layout_marginStart="52dp"
-        android:id="@+id/button5"
-        android:background="@android:color/background_dark"
-        android:layout_below="@+id/toolbar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="gopage"
 
-        />
+
 
 
 </RelativeLayout>
+
