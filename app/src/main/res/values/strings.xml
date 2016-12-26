@@ -11,4 +11,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_delete">Delete</string>
+    <string-array name="category_name">
+        <item>Gaming</item>
+        <item>Business</item>
+        <item>Concert</item>
+        <item>Exhibition</item>
+        <item>Parties</item>
+        <item>Sports</item>
+        <item>Educational</item>
+        <item>Others</item>
+
+    </string-array>
 </resources>
