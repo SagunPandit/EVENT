@@ -39,7 +39,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Upload"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".UserDetails"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

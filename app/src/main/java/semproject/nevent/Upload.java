@@ -3,6 +3,7 @@ package semproject.nevent;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -29,6 +30,7 @@ public class Upload extends AppCompatActivity {
     String username,category_name;
     /*Spinner spinner;*/
     EditText event_name, location, date;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,13 +122,14 @@ public class Upload extends AppCompatActivity {
                                 break;
                             case 1:
                                 Log.e(STRING_TAG, "Success");
-                                Intent intent = new Intent(Upload.this, HomePage.class);
-                                startActivity(intent);
                                 toastMesg = "Congratulations!! You have successfully created an event.";
                                 toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_LONG);
                                 v = (TextView) toast.getView().findViewById(android.R.id.message);
                                 if (v != null) v.setGravity(Gravity.CENTER);
                                 toast.show();
+                                Intent intent = new Intent(Upload.this, HomePage.class);
+                                startActivity(intent);
+
                                 break;
 
                             default:
