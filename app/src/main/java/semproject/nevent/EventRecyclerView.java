@@ -1,6 +1,7 @@
 package semproject.nevent;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -108,11 +109,22 @@ public class EventRecyclerView {
             // click event handler when Item in RecyclerView is clicked
 
         }
-        public void removeAt(int position,Item item) {
-            items.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, items.size());
-            listenerFunction(item);
+        public void removeAt(final int position, final Item item) {
+            AlertDialog.Builder builder= new AlertDialog.Builder(item.context);
+            builder.setMessage("Do you really want to delete this event?")
+                    .setTitle("Confirmation")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            items.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, items.size());
+                            listenerFunction(item);
+                        }
+                    })
+                    .setNegativeButton("NO",null)
+                    .create()
+                    .show();
+
         }
 
         public void listenerFunction(Item item){
