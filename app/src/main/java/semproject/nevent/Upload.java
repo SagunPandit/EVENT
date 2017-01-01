@@ -1,5 +1,6 @@
 package semproject.nevent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class Upload extends AppCompatActivity {
+public class Upload extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
 
     final String STRING_TAG = "Upload";
@@ -143,13 +144,41 @@ public class Upload extends AppCompatActivity {
 
                 }
             };
+            if(checkConnection(this)) {
+                UploadRequest uploadRequest = new UploadRequest(fevent_name, flocation, fdate, category_name, username, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(this);
+                queue.add(uploadRequest);//automatically start the string request on the queue
+            }
+            else {
+                Intent intent= new Intent(this,InternetConnection.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+    }
 
+    private boolean checkConnection(Context context) {
+        Log.e(STRING_TAG,"checkConnection");
+        boolean isConnected = ConnectivityReceiver.isConnected(context);
+        if(!isConnected){
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
+        return isConnected;
+    }
 
-
-            UploadRequest uploadRequest = new UploadRequest(fevent_name, flocation, fdate, category_name, username,responseListener);
-            RequestQueue queue = Volley.newRequestQueue(this);
-            queue.add(uploadRequest);//automatically start the string request on the queue
-
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            Intent intent= new Intent(this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
         }
     }
 }
