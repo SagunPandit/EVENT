@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            android:id="@+id/recycler_view"
+            android:id="@+id/all_recycler_view"
 
             />
 

@@ -56,6 +56,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     List<String>eventLocation=new ArrayList<>();
     List<String>eventDate=new ArrayList<>();
     List<String>eventCategory=new ArrayList<>();
+    List<String>eventOrganizer=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
 
             RecyclerView.LayoutManager mLayoutManager;
-            mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+            mRecyclerView = (RecyclerView) findViewById(R.id.all_recycler_view);
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
             if (mRecyclerView != null) {
@@ -236,8 +237,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(context, eventRecyclerView.getItem());
+                eventRecyclerView.initializeData(eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),context);
+                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem());
                 mRecyclerView.setAdapter(mAdapter);
             }
         }
@@ -265,6 +266,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         JSONArray jsonArray2 = jsonObject.getJSONArray("location_name");
                         JSONArray jsonArray3 = jsonObject.getJSONArray("event_date");
                         JSONArray jsonArray4 = jsonObject.getJSONArray("event_category");
+                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_organizer");
                         if (jsonArray != null) {
                             int len = jsonArray.length();
                             Log.e(STRING_TAG,Integer.toString(len));
@@ -283,6 +285,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                             //for eventcategory
                             for (int i=0;i<len;i++){
                                 eventCategory.add(jsonArray4.get(i).toString());
+                            }
+                            //for eventorganizer
+                            for (int i=0;i<len;i++){
+                                eventOrganizer.add(jsonArray5.get(i).toString());
                             }
 
                             retreiveFromDatabase(eventRecyclerView, mRecyclerView, HomePage.this);
@@ -304,7 +310,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             }
         };
         if(checkConnection(this)){
-            RecyclerRequest recyclerRequest=new RecyclerRequest(username, responseListener);
+            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"all", responseListener);
             RequestQueue queue = Volley.newRequestQueue(HomePage.this);
             queue.add(recyclerRequest);
         }

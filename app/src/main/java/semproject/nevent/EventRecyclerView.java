@@ -189,5 +189,76 @@ public class EventRecyclerView {
             }
         }
     }
+
+
+    //For all users
+    public static class AllItemAdapter extends RecyclerView.Adapter<AllItemAdapter.AllItemViewHolder>{
+        String STRING_TAG= "ItemAdapter";
+        /* private instance variable to store Layout of each item. */
+        private LayoutInflater inflater;
+        /* Store data */
+        List<Item> items = Collections.emptyList();
+
+        // Constructor to inflate layout of each item in RecyclerView
+        public AllItemAdapter(Context context, List<Item> items) {
+            inflater = LayoutInflater.from(context);
+            this.items = items;
+        }
+
+        //create a view holder of items
+        @Override
+        public AllItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Log.v(LOG_TAG, "onCreateViewHolder called.");
+            View view = inflater.inflate(R.layout.allevents_details, parent, false);
+
+            AllItemAdapter.AllItemViewHolder holder = new AllItemAdapter.AllItemViewHolder(view);
+
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(AllItemViewHolder holder, int position) {
+            Log.v(LOG_TAG, "onBindViewHolder called.");
+            String defaultLabel="Activity";
+            final Item currentItem = items.get(position);
+
+            if(holder.eventLabel.getText().equals(" "))
+                holder.eventLabel.setText(defaultLabel);
+            else
+                holder.eventLabel.setText(currentItem.eventLabel);
+            holder.eventLocation.setText(currentItem.eventLocation);
+            holder.eventDate.setText(currentItem.eventDate);
+            holder.eventCategory.setText(currentItem.eventCategory);
+            holder.eventOrganizer.setText(currentItem.eventOrganizer);
+
+        }
+
+
+
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
+
+        /* ViewHolder for this adapter */
+        class AllItemViewHolder extends RecyclerView.ViewHolder {
+
+            TextView eventLabel;
+            TextView eventLocation;
+            TextView eventDate;
+            TextView eventOrganizer;
+            TextView eventCategory;
+
+            public AllItemViewHolder(View itemView) {
+                super(itemView);
+
+                eventCategory=(TextView) itemView.findViewById(R.id.alleventCategory);
+                eventLabel = (TextView) itemView.findViewById(R.id.alleventLabel);
+                eventLocation = (TextView) itemView.findViewById(R.id.alleventLocation);
+                eventDate=(TextView) itemView.findViewById(R.id.alleventDate);
+                eventOrganizer=(TextView) itemView.findViewById(R.id.alleventOrganizer);
+            }
+        }
+    }
 }
 
