@@ -41,10 +41,13 @@
         <activity
             android:name=".Upload"
             android:screenOrientation="portrait" />
-        <activity android:name=".UserDetails"
+        <activity
+            android:name=".UserDetails"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".InternetConnection"/>
+
     </application>
 
 </manifest>

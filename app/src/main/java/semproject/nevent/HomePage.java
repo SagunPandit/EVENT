@@ -44,7 +44,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,ConnectivityReceiver.ConnectivityReceiverListener {
     final String STRING_TAG= "HomePage";
     NavigationView navigationView=null;
     Toolbar toolbar=null;
@@ -62,33 +62,34 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username");
-        Button userbutton=(Button)findViewById(R.id.user_button);
-        userbutton.setText(username);
+
+            Intent intent = getIntent();
+            username = intent.getStringExtra("username");
+            Button userbutton=(Button)findViewById(R.id.user_button);
+            userbutton.setText(username);
 
 
-        RecyclerView.LayoutManager mLayoutManager;
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        if (mRecyclerView != null) {
-            mRecyclerView.setHasFixedSize(true);
-        }
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        listenerFunction(username);
+            RecyclerView.LayoutManager mLayoutManager;
+            mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            if (mRecyclerView != null) {
+                mRecyclerView.setHasFixedSize(true);
+            }
+            // use a linear layout manager
+            mLayoutManager = new LinearLayoutManager(this);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            listenerFunction(username);
 
 
-        // Set the fragments
-        Trending trending=new Trending();
-        android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, trending);
-        fragmentTransaction.commit();
+            // Set the fragments
+            Trending trending=new Trending();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, trending);
+            fragmentTransaction.commit();
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -99,14 +100,16 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             }
         });*/
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+
+
 
 
     }
@@ -173,35 +176,75 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         return true;
     }
 
+    private boolean checkConnection(Context context) {
+        Log.e(STRING_TAG,"checkConnection");
+        boolean isConnected = ConnectivityReceiver.isConnected(context);
+        if(!isConnected){
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
+        return isConnected;
+    }
+
     public void gopage(View view) {
-        Intent i=new Intent(this, HomePage.class);
-        i.putExtra("username",username);
-        startActivity(i);
-        finish();
+        if(checkConnection(this)){
+            Intent i=new Intent(this, HomePage.class);
+            i.putExtra("username",username);
+            startActivity(i);
+            finish();
+        }
+        else {
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void addevents(View view) {
-        Intent i=new Intent(this, Upload.class);
-        i.putExtra("username",username);
-        startActivity(i);
+        if(checkConnection(this)){
+            Intent i=new Intent(this, Upload.class);
+            i.putExtra("username",username);
+            startActivity(i);
+        }
+        else {
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
+
 
     }
 
     public void userdetails(View view){
-        Intent intent = new Intent(this, UserDetails.class);
-        intent.putExtra("username",username);
-        startActivity(intent);
-        finish();
+        if(checkConnection(this)){
+            Intent intent = new Intent(this, UserDetails.class);
+            intent.putExtra("username",username);
+            startActivity(intent);
+            finish();
+        }
+        else {
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
         Log.e(STRING_TAG,"database");
-        for (int i=0;i < eventList.size();i++)
-        {
-            Log.i("Value of element "+i,eventList.get(i));
-            eventRecyclerView.initializeData(eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,context);
-            RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(context, eventRecyclerView.getItem());
-            mRecyclerView.setAdapter(mAdapter);
+        if(checkConnection(this)){
+            for (int i=0;i < eventList.size();i++)
+            {
+                Log.i("Value of element "+i,eventList.get(i));
+                eventRecyclerView.initializeData(eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,context);
+                RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(context, eventRecyclerView.getItem());
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        }
+        else {
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
         }
 
     }
@@ -260,9 +303,29 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 }
             }
         };
-        RecyclerRequest recyclerRequest=new RecyclerRequest(username, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(HomePage.this);
-        queue.add(recyclerRequest);
+        if(checkConnection(this)){
+            RecyclerRequest recyclerRequest=new RecyclerRequest(username, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(HomePage.this);
+            queue.add(recyclerRequest);
+        }
+        else {
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            Intent intent= new Intent(this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 }

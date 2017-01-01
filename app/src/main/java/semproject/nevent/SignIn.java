@@ -22,7 +22,7 @@ import org.json.JSONObject;
 
 import static semproject.nevent.MainActivity.PreferenceFile;
 
-public class SignIn extends Activity {
+public class SignIn extends Activity implements ConnectivityReceiver.ConnectivityReceiverListener  {
     final String STRING_TAG = "SignIn";
     SharedPreferences sharedpreferences;
     EditText username;
@@ -39,20 +39,37 @@ public class SignIn extends Activity {
     }
 
     public void signin(View view){
-        username= (EditText) findViewById(R.id.username_main);
-        password= (EditText) findViewById(R.id.password_main);
+        if(checkConnection(this)) {
+            username = (EditText) findViewById(R.id.username_main);
+            password = (EditText) findViewById(R.id.password_main);
 
-        if((username.getText().toString().isEmpty()|| password.getText().toString().isEmpty())){
-            String toastMesg = "Please enter username and password to login";
-            Toast toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
-            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-            if (v != null) v.setGravity(Gravity.CENTER);
-            toast.show();
+            if ((username.getText().toString().isEmpty() || password.getText().toString().isEmpty())) {
+                String toastMesg = "Please enter username and password to login";
+                Toast toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                if (v != null) v.setGravity(Gravity.CENTER);
+                toast.show();
+            } else {
+                listenerFunction(username.getText().toString(), password.getText().toString());
+            }
         }
-        else{
-            listenerFunction(username.getText().toString(),password.getText().toString());
+        else {
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
         }
 
+    }
+
+    private boolean checkConnection(Context context) {
+        Log.e(STRING_TAG,"checkConnection");
+        boolean isConnected = ConnectivityReceiver.isConnected(context);
+        if(!isConnected){
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
+        return isConnected;
     }
 
     public void listenerFunction(String username, String password){
@@ -98,6 +115,20 @@ public class SignIn extends Activity {
         LoginRequest loginRequest=new LoginRequest(username, password, responseListener);
         RequestQueue queue = Volley.newRequestQueue(SignIn.this);
         queue.add(loginRequest);
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            Intent intent= new Intent(this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }
 

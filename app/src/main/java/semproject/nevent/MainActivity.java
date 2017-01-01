@@ -28,7 +28,7 @@ import java.net.URL;
 
 import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
     final String STRING_TAG = "MainActivity";
     public static String PreferenceFile = "neventpreff" ;
     SharedPreferences sharedpreferences;
@@ -38,22 +38,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedpreferences = getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
-        String username= sharedpreferences.getString("username","");
-        String password= sharedpreferences.getString("password","");
+
         Log.e(STRING_TAG,"Check");
-        if(username.isEmpty()|| password.isEmpty()){
-            Log.e(STRING_TAG,"splash");
-            Intent intent= new Intent(MainActivity.this,SignIn.class);
+        if(checkConnection(this)){
+            sharedpreferences = getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
+            String username= sharedpreferences.getString("username","");
+            String password= sharedpreferences.getString("password","");
+            if(username.isEmpty()|| password.isEmpty()){
+                Log.e(STRING_TAG,"splash");
+                Intent intent= new Intent(MainActivity.this,SignIn.class);
+                startActivity(intent);
+                finish();
+            }
+            else{
+                listenerFunction(username,password);
+            }
+        }else {
+            Intent intent= new Intent(this,InternetConnection.class);
             startActivity(intent);
             finish();
         }
-        else{
-            listenerFunction(username,password);
-        }
+
+        /*if(hasInternetAccess(this)){
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }*/
     }
 
-    public static boolean checkInternet(Context context){
+    private boolean checkConnection(Context context) {
+        Log.e(STRING_TAG,"checkConnection");
+        boolean isConnected = ConnectivityReceiver.isConnected(context);
+        if(!isConnected){
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
+        return isConnected;
+    }
+
+   /* public boolean checkInternet(Context context){
         ConnectivityManager cm =
                 (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -63,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         return isConnected;
     }
 
-    public static boolean hasInternetAccess(Context context) {
+    public boolean hasInternetAccess(Context context) {
         if (checkInternet(context)) {
             try {
                 HttpURLConnection urlc = (HttpURLConnection)
@@ -76,13 +100,15 @@ public class MainActivity extends AppCompatActivity {
                 return (urlc.getResponseCode() == 204 &&
                         urlc.getContentLength() == 0);
             } catch (IOException e) {
-                //Log.e(TAG, "Error checking internet connection", e);
+                Log.e(STRING_TAG, "Error checking internet connection", e);
             }
         } else {
-            //Log.d(TAG, "No network available!");
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
         }
         return false;
-    }
+    }*/
 
     public void listenerFunction(String username, String password){
         Response.Listener<String> responseListener= new Response.Listener<String>() {
@@ -127,5 +153,19 @@ public class MainActivity extends AppCompatActivity {
         LoginRequest loginRequest=new LoginRequest(username, password, responseListener);
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         queue.add(loginRequest);
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(isConnected){
+            Intent intent= new Intent(this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }
