@@ -3,12 +3,13 @@
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:onClick="eventdetails">
 
         <LinearLayout
-            android:id="@+id/linear1"
             android:layout_width="0dp"
             android:layout_weight="3"
             android:layout_height="wrap_content"
@@ -78,15 +79,32 @@
                 android:textColor="#008000"/>
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/eventDelete"
-            android:layout_width="34dp"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.74"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_menu_delete"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
+            <ImageButton
+                android:id="@+id/eventDelete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_delete"
+                />
+            <TextView
+                android:id="@+id/eventId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="id"
+                android:textAlignment="center"
+                android:textColor="#008000"
+                android:textSize="20dp"
+                android:visibility="invisible"
+                />
 
-            android:layout_marginTop="10dp"
-            android:layout_weight="0.74" />
+        </LinearLayout>
+
 
     </LinearLayout>
 

@@ -2,6 +2,7 @@ package semproject.nevent;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +39,8 @@ public class EventRecyclerView {
 
     }
 
-    public void initializeData(String eventname,String eventcategory,String eventlocation,String eventdate,String organizer,Context context) {
-        items.add(new Item(eventname, eventcategory,eventlocation,eventdate,organizer,context));
+    public void initializeData(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String organizer,Context context) {
+        items.add(new Item(eventid,eventname, eventcategory,eventlocation,eventdate,organizer,context));
 
     }
 
@@ -46,10 +48,11 @@ public class EventRecyclerView {
         return items;
     }
     private class Item {
-        private String eventLabel,eventLocation,eventDate,eventOrganizer,eventCategory;
+        private String eventId,eventLabel,eventLocation,eventDate,eventOrganizer,eventCategory;
         private Context context;
 
-        Item(String eventname,String eventcategory,String eventlocation,String eventdate,String eventOrganizer,Context context) {
+        Item(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String eventOrganizer,Context context) {
+            this.eventId=eventid;
             this.eventLabel=eventname;
             this.eventLocation=eventlocation;
             this.eventDate=eventdate;
@@ -58,7 +61,6 @@ public class EventRecyclerView {
             this.context=context;
         }
     }
-
     // Creating an Adapter i.e to add each items in recyclerView
     public static class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder>{
         String STRING_TAG= "ItemAdapter";
@@ -86,7 +88,7 @@ public class EventRecyclerView {
 
         //binds all the views from view holder to form a single view and show the binded view
         @Override
-        public void onBindViewHolder(ItemViewHolder holder, final int position) {
+        public void onBindViewHolder(final ItemViewHolder holder, final int position) {
             Log.v(LOG_TAG, "onBindViewHolder called.");
             String defaultLabel="Activity";
             final Item currentItem = items.get(position);
@@ -99,6 +101,22 @@ public class EventRecyclerView {
             holder.eventDate.setText(currentItem.eventDate);
             holder.eventCategory.setText(currentItem.eventCategory);
             holder.eventOrganizer.setText(currentItem.eventOrganizer);
+            holder.eventId.setText(currentItem.eventId);
+            holder.eventLinear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent (currentItem.context,EventDetails.class);
+                    intent.putExtra("eventId",holder.eventId.getText().toString());
+                    intent.putExtra("eventLabel",holder.eventLabel.getText().toString());
+                    intent.putExtra("eventLocation",holder.eventLocation.getText().toString());
+                    intent.putExtra("eventDate",holder.eventDate.getText().toString());
+                    intent.putExtra("eventCategory",holder.eventCategory.getText().toString());
+                    intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
+                    currentItem.context.startActivity(intent);
+
+                }
+
+            });
             holder.eventDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -169,17 +187,19 @@ public class EventRecyclerView {
 
         /* ViewHolder for this adapter */
         class ItemViewHolder extends RecyclerView.ViewHolder {
-
+            LinearLayout eventLinear;
             TextView eventLabel;
             TextView eventLocation;
             TextView eventDate;
             TextView eventOrganizer;
             ImageButton eventDelete;
             TextView eventCategory;
+            TextView eventId;
 
             public ItemViewHolder(View itemView) {
                 super(itemView);
-
+                eventLinear=(LinearLayout) itemView.findViewById(R.id.linear1);
+                eventId=(TextView) itemView.findViewById(R.id.eventId);
                 eventCategory=(TextView) itemView.findViewById(R.id.eventCategory);
                 eventLabel = (TextView) itemView.findViewById(R.id.eventLabel);
                 eventLocation = (TextView) itemView.findViewById(R.id.eventLocation);
@@ -217,7 +237,7 @@ public class EventRecyclerView {
         }
 
         @Override
-        public void onBindViewHolder(AllItemViewHolder holder, int position) {
+        public void onBindViewHolder(final AllItemViewHolder holder, int position) {
             Log.v(LOG_TAG, "onBindViewHolder called.");
             String defaultLabel="Activity";
             final Item currentItem = items.get(position);
@@ -230,6 +250,20 @@ public class EventRecyclerView {
             holder.eventDate.setText(currentItem.eventDate);
             holder.eventCategory.setText(currentItem.eventCategory);
             holder.eventOrganizer.setText(currentItem.eventOrganizer);
+            holder.eventId.setText(currentItem.eventId);
+            holder.eventLinear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent (currentItem.context,EventDetails.class);
+                    intent.putExtra("eventId",holder.eventId.getText().toString());
+                    intent.putExtra("eventLabel",holder.eventLabel.getText().toString());
+                    intent.putExtra("eventLocation",holder.eventLocation.getText().toString());
+                    intent.putExtra("eventDate",holder.eventDate.getText().toString());
+                    intent.putExtra("eventCategory",holder.eventCategory.getText().toString());
+                    intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
+                    currentItem.context.startActivity(intent);
+                }
+            });
 
         }
 
@@ -242,16 +276,18 @@ public class EventRecyclerView {
 
         /* ViewHolder for this adapter */
         class AllItemViewHolder extends RecyclerView.ViewHolder {
-
+            LinearLayout eventLinear;
             TextView eventLabel;
             TextView eventLocation;
             TextView eventDate;
             TextView eventOrganizer;
             TextView eventCategory;
+            TextView eventId;
 
             public AllItemViewHolder(View itemView) {
                 super(itemView);
-
+                eventLinear=(LinearLayout) itemView.findViewById(R.id.alllinear1);
+                eventId=(TextView) itemView.findViewById(R.id.alleventId);
                 eventCategory=(TextView) itemView.findViewById(R.id.alleventCategory);
                 eventLabel = (TextView) itemView.findViewById(R.id.alleventLabel);
                 eventLocation = (TextView) itemView.findViewById(R.id.alleventLocation);

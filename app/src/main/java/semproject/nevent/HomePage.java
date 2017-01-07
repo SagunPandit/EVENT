@@ -52,6 +52,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     Context context;
     private RecyclerView mRecyclerView;
     EventRecyclerView eventRecyclerView = new EventRecyclerView();
+    List<String>eventId=new ArrayList<>();
     List<String>eventList=new ArrayList<>();
     List<String>eventLocation=new ArrayList<>();
     List<String>eventDate=new ArrayList<>();
@@ -114,9 +115,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
 
     }
-
-
-
 
     @Override
     public void onBackPressed() {
@@ -217,6 +215,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     }
 
+    public void alleventdetails(View view){
+        TextView id=(TextView) findViewById(R.id.alleventId);
+        if (id != null) {
+            Log.e(STRING_TAG,id.getText().toString());
+        }
+    }
+
     public void userdetails(View view){
         if(checkConnection(this)){
             Intent intent = new Intent(this, UserDetails.class);
@@ -237,7 +242,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),context);
+                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),context);
                 RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem());
                 mRecyclerView.setAdapter(mAdapter);
             }
@@ -267,9 +272,14 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         JSONArray jsonArray3 = jsonObject.getJSONArray("event_date");
                         JSONArray jsonArray4 = jsonObject.getJSONArray("event_category");
                         JSONArray jsonArray5 = jsonObject.getJSONArray("event_organizer");
+                        JSONArray jsonArray6 = jsonObject.getJSONArray("event_id");
                         if (jsonArray != null) {
                             int len = jsonArray.length();
                             Log.e(STRING_TAG,Integer.toString(len));
+                            //for eventId
+                            for (int i=0;i<len;i++){
+                                eventId.add(jsonArray6.get(i).toString());
+                            }
                             //for eventname
                             for (int i=0;i<len;i++){
                                 eventList.add(jsonArray.get(i).toString());

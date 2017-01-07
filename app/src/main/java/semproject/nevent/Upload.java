@@ -26,11 +26,10 @@ import org.json.JSONObject;
 
 public class Upload extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
-
     final String STRING_TAG = "Upload";
     String username,category_name;
     /*Spinner spinner;*/
-    EditText event_name, location, date;
+    EditText event_name, location, date, details;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +64,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
         event_name = (EditText) findViewById(R.id.event_name);
         location = (EditText) findViewById(R.id.location);
         date = (EditText) findViewById(R.id.date);
+        details=(EditText) findViewById(R.id.details);
 
 
 
@@ -86,7 +86,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
         TextView v;
         Log.e(STRING_TAG,username);
 
-        if(event_name.getText().toString().isEmpty() || location.getText().toString().isEmpty() || date.getText().toString().isEmpty())
+        if(event_name.getText().toString().isEmpty() || location.getText().toString().isEmpty() || date.getText().toString().isEmpty() || details.getText().toString().isEmpty())
         {
             toastMesg = "All fields must be filled.";
             toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
@@ -99,6 +99,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
             final String fevent_name = event_name.getText().toString();
             final String flocation = location.getText().toString();
             final String fdate = date.getText().toString();
+            final String fdetails= details.getText().toString();
 
             Response.Listener<String> responseListener = new Response.Listener<String>()
             {
@@ -145,7 +146,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
                 }
             };
             if(checkConnection(this)) {
-                UploadRequest uploadRequest = new UploadRequest(fevent_name, flocation, fdate, category_name, username, responseListener);
+                UploadRequest uploadRequest = new UploadRequest(fevent_name, flocation, fdate, category_name, username, fdetails, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(this);
                 queue.add(uploadRequest);//automatically start the string request on the queue
             }

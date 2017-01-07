@@ -1,6 +1,7 @@
 <?php
-    require("password.php");
-    $con = mysqli_connect("localhost:3306", "avashadh_android", "Nepali_Babu_Adhikari123", "avashadh_event");
+
+     require("password.php");
+     $con = mysqli_connect("localhost:3306", "avashadh_android", "Nepali_Babu_Adhikari123", "avashadh_event");
     if (mysqli_connect_errno())
     {
     echo "Failed to connect to MySQL: " . mysqli_connect_error();
@@ -20,11 +21,17 @@
 
     while(mysqli_stmt_fetch($statement)){
         $response["inside"]=$colPassword;
-        if (password_verify($password, $colPassword)) {     
+        if (password_verify($password, $colPassword)) {
+            
             $response["success"] = true; 
             $response["email"] = $email; 
             $response["username"] = $username;
+            $response["password"] = $password;
+                      
         }
+      
     }
+    
     echo json_encode($response);
 ?>
+

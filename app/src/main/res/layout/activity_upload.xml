@@ -10,7 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="semproject.nevent.Upload">
 
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,8 +35,6 @@
         android:ems="10"
         android:layout_below="@id/location"
         android:layout_marginTop="11dp"/>
-
-
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,16 +42,26 @@
         android:id="@+id/spinner"
         android:entries="@array/category_name"
         android:layout_marginTop="11dp">
-
-
     </Spinner>
+
+    <EditText
+        android:id="@+id/details"
+        android:layout_below="@id/spinner"
+        android:inputType="textCapSentences|textMultiLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Give details"
+        android:gravity="top"
+        android:lines="5"
+        android:layout_marginTop="11dp"/>
+
 
     <Button
         android:text="Upload"
         android:background="@drawable/shape2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinner"
+        android:layout_below="@id/details"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:id="@+id/button_register"

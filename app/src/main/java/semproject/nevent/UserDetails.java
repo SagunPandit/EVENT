@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,6 +36,7 @@ public class UserDetails extends AppCompatActivity implements ConnectivityReceiv
     List<String>eventLocation=new ArrayList<>();
     List<String>eventDate=new ArrayList<>();
     List<String>eventCategory=new ArrayList<>();
+    List<String>eventId=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,12 @@ public class UserDetails extends AppCompatActivity implements ConnectivityReceiv
         }
     }
 
+    public void eventdetails(View view){
+        TextView id=(TextView) findViewById(R.id.eventId);
+        if (id != null) {
+            Log.e(STRING_TAG,id.getText().toString());
+        }
+    }
     public void logout(View view){
         if(checkConnection(this)){
             sharedpreferences = getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
@@ -101,7 +109,7 @@ public class UserDetails extends AppCompatActivity implements ConnectivityReceiv
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,context);
+                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,context);
                 RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(context, eventRecyclerView.getItem());
                 mRecyclerView.setAdapter(mAdapter);
             }
@@ -129,9 +137,14 @@ public class UserDetails extends AppCompatActivity implements ConnectivityReceiv
                         JSONArray jsonArray2 = jsonObject.getJSONArray("location_name");
                         JSONArray jsonArray3 = jsonObject.getJSONArray("event_date");
                         JSONArray jsonArray4 = jsonObject.getJSONArray("event_category");
+                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_id");
                         if (jsonArray != null) {
                             int len = jsonArray.length();
                             Log.e(STRING_TAG,Integer.toString(len));
+                            //for eventid
+                            for (int i=0;i<len;i++){
+                                eventId.add(jsonArray5.get(i).toString());
+                            }
                             //for eventname
                             for (int i=0;i<len;i++){
                                 eventList.add(jsonArray.get(i).toString());

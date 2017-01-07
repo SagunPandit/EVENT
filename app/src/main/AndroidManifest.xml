@@ -44,10 +44,10 @@
         <activity
             android:name=".UserDetails"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".InternetConnection"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".InternetConnection" />
+        <activity android:name=".EventDetails"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
