@@ -57,16 +57,7 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
     }
     //String eventId,String eventLabel,String eventLocation,String eventDate,String eventOrganizer,String eventCategory
 
-    private boolean checkConnection(Context context) {
-        Log.e(STRING_TAG,"checkConnection");
-        boolean isConnected = ConnectivityReceiver.isConnected(context);
-        if(!isConnected){
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
-        }
-        return isConnected;
-    }
+
 
     public void listenerFunction(String eventId){
         Log.e(STRING_TAG,"insideListiner");
@@ -104,6 +95,17 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
             startActivity(intent);
             finish();
         }
+    }
+
+    private boolean checkConnection(Context context) {
+        Log.e(STRING_TAG,"checkConnection");
+        boolean isConnected = ConnectivityReceiver.isConnected(context);
+        if(!isConnected){
+            Intent intent= new Intent(this,InternetConnection.class);
+            startActivity(intent);
+            finish();
+        }
+        return isConnected;
     }
 
     @Override

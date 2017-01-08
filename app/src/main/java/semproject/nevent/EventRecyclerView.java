@@ -1,5 +1,6 @@
 package semproject.nevent;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -61,13 +62,40 @@ public class EventRecyclerView {
             this.context=context;
         }
     }
+
+
     // Creating an Adapter i.e to add each items in recyclerView
-    public static class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder>{
+    public static class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> implements ConnectivityReceiver.ConnectivityReceiverListener {
         String STRING_TAG= "ItemAdapter";
         /* private instance variable to store Layout of each item. */
         private LayoutInflater inflater;
         /* Store data */
         List<Item> items = Collections.emptyList();
+        Item currentItem;
+        private boolean checkConnection() {
+            Log.e(STRING_TAG,"checkConnection");
+            boolean isConnected = ConnectivityReceiver.isConnected(currentItem.context);
+            if(!isConnected){
+                Intent intent= new Intent(currentItem.context,InternetConnection.class);
+                currentItem.context.startActivity(intent);
+                ((Activity)currentItem.context).finish();
+            }
+            return isConnected;
+        }
+
+        @Override
+        public void onNetworkConnectionChanged(boolean isConnected) {
+            if(isConnected){
+                Intent intent= new Intent(currentItem.context,MainActivity.class);
+                currentItem.context.startActivity(intent);
+                ((Activity)currentItem.context).finish();
+            }
+            else{
+                Intent intent= new Intent(currentItem.context,InternetConnection.class);
+                currentItem.context.startActivity(intent);
+                ((Activity)currentItem.context).finish();
+            }
+        }
 
         // Constructor to inflate layout of each item in RecyclerView
         public ItemAdapter(Context context, List<Item> items) {
@@ -91,7 +119,7 @@ public class EventRecyclerView {
         public void onBindViewHolder(final ItemViewHolder holder, final int position) {
             Log.v(LOG_TAG, "onBindViewHolder called.");
             String defaultLabel="Activity";
-            final Item currentItem = items.get(position);
+            currentItem = items.get(position);
 
             if(holder.eventLabel.getText().equals(" "))
                 holder.eventLabel.setText(defaultLabel);
@@ -105,14 +133,22 @@ public class EventRecyclerView {
             holder.eventLinear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent (currentItem.context,EventDetails.class);
-                    intent.putExtra("eventId",holder.eventId.getText().toString());
-                    intent.putExtra("eventLabel",holder.eventLabel.getText().toString());
-                    intent.putExtra("eventLocation",holder.eventLocation.getText().toString());
-                    intent.putExtra("eventDate",holder.eventDate.getText().toString());
-                    intent.putExtra("eventCategory",holder.eventCategory.getText().toString());
-                    intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
-                    currentItem.context.startActivity(intent);
+                    if(checkConnection()){
+                        Intent intent=new Intent (currentItem.context,EventDetails.class);
+                        intent.putExtra("eventId",holder.eventId.getText().toString());
+                        intent.putExtra("eventLabel",holder.eventLabel.getText().toString());
+                        intent.putExtra("eventLocation",holder.eventLocation.getText().toString());
+                        intent.putExtra("eventDate",holder.eventDate.getText().toString());
+                        intent.putExtra("eventCategory",holder.eventCategory.getText().toString());
+                        intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
+                        currentItem.context.startActivity(intent);
+                    }
+                    else{
+                        Intent intent= new Intent(currentItem.context,InternetConnection.class);
+                        currentItem.context.startActivity(intent);
+                        ((Activity)currentItem.context).finish();
+                    }
+
 
                 }
 
@@ -212,17 +248,44 @@ public class EventRecyclerView {
 
 
     //For all users
-    public static class AllItemAdapter extends RecyclerView.Adapter<AllItemAdapter.AllItemViewHolder>{
+    public static class AllItemAdapter extends RecyclerView.Adapter<AllItemAdapter.AllItemViewHolder>implements ConnectivityReceiver.ConnectivityReceiverListener{
         String STRING_TAG= "ItemAdapter";
         /* private instance variable to store Layout of each item. */
         private LayoutInflater inflater;
         /* Store data */
         List<Item> items = Collections.emptyList();
+        Item currentItem;
+
 
         // Constructor to inflate layout of each item in RecyclerView
         public AllItemAdapter(Context context, List<Item> items) {
             inflater = LayoutInflater.from(context);
             this.items = items;
+        }
+
+        private boolean checkConnection() {
+            Log.e(STRING_TAG,"checkConnection");
+            boolean isConnected = ConnectivityReceiver.isConnected(currentItem.context);
+            if(!isConnected){
+                Intent intent= new Intent(currentItem.context,InternetConnection.class);
+                currentItem.context.startActivity(intent);
+                ((Activity)currentItem.context).finish();
+            }
+            return isConnected;
+        }
+
+        @Override
+        public void onNetworkConnectionChanged(boolean isConnected) {
+            if(isConnected){
+                Intent intent= new Intent(currentItem.context,MainActivity.class);
+                currentItem.context.startActivity(intent);
+                ((Activity)currentItem.context).finish();
+            }
+            else{
+                Intent intent= new Intent(currentItem.context,InternetConnection.class);
+                currentItem.context.startActivity(intent);
+                ((Activity)currentItem.context).finish();
+            }
         }
 
         //create a view holder of items
@@ -240,7 +303,7 @@ public class EventRecyclerView {
         public void onBindViewHolder(final AllItemViewHolder holder, int position) {
             Log.v(LOG_TAG, "onBindViewHolder called.");
             String defaultLabel="Activity";
-            final Item currentItem = items.get(position);
+            currentItem = items.get(position);
 
             if(holder.eventLabel.getText().equals(" "))
                 holder.eventLabel.setText(defaultLabel);
@@ -254,14 +317,21 @@ public class EventRecyclerView {
             holder.eventLinear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent (currentItem.context,EventDetails.class);
-                    intent.putExtra("eventId",holder.eventId.getText().toString());
-                    intent.putExtra("eventLabel",holder.eventLabel.getText().toString());
-                    intent.putExtra("eventLocation",holder.eventLocation.getText().toString());
-                    intent.putExtra("eventDate",holder.eventDate.getText().toString());
-                    intent.putExtra("eventCategory",holder.eventCategory.getText().toString());
-                    intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
-                    currentItem.context.startActivity(intent);
+                    if(checkConnection()){
+                        Intent intent=new Intent (currentItem.context,EventDetails.class);
+                        intent.putExtra("eventId",holder.eventId.getText().toString());
+                        intent.putExtra("eventLabel",holder.eventLabel.getText().toString());
+                        intent.putExtra("eventLocation",holder.eventLocation.getText().toString());
+                        intent.putExtra("eventDate",holder.eventDate.getText().toString());
+                        intent.putExtra("eventCategory",holder.eventCategory.getText().toString());
+                        intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
+                        currentItem.context.startActivity(intent);
+                    }else{
+                        Intent intent= new Intent(currentItem.context,InternetConnection.class);
+                        currentItem.context.startActivity(intent);
+                        ((Activity)currentItem.context).finish();
+                    }
+
                 }
             });
 
