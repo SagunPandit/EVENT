@@ -84,6 +84,14 @@
                     android:textSize="15sp"
                     android:textColor="#008000"
                     android:visibility="invisible"/>
+                <TextView
+                    android:id="@+id/alleventView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="views"
+                    android:textSize="15sp"
+                    android:textColor="#008000"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
         </LinearLayout>

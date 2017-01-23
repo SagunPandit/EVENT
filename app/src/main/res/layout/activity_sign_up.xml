@@ -79,12 +79,18 @@
         android:layout_alignEnd="@id/password_register"
         android:layout_alignRight="@id/password_register"
         android:background="@drawable/shape"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:id="@+id/imagetoupload"
+        android:layout_below="@id/confpassword_register"/>
     <Button
         android:text="Sign Up"
         android:background="@drawable/shape2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/confpassword_register"
+        android:layout_below="@id/imagetoupload"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:id="@+id/button_register"

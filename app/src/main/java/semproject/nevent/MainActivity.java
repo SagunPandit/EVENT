@@ -53,12 +53,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
             else{
                 listenerFunction(username,password);
             }
-        }else {
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
         }
-
         /*if(hasInternetAccess(this)){
             Intent intent= new Intent(this,InternetConnection.class);
             startActivity(intent);
@@ -71,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         boolean isConnected = ConnectivityReceiver.isConnected(context);
         if(!isConnected){
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         return isConnected;
     }
@@ -159,13 +154,15 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     public void onNetworkConnectionChanged(boolean isConnected) {
         if(isConnected){
             Intent intent= new Intent(this,MainActivity.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
+
         }
         else{
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
+
         }
     }
 }

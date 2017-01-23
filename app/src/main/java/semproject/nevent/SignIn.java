@@ -53,11 +53,6 @@ public class SignIn extends Activity implements ConnectivityReceiver.Connectivit
                 listenerFunction(username.getText().toString(), password.getText().toString());
             }
         }
-        else {
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
-        }
 
     }
 
@@ -66,8 +61,8 @@ public class SignIn extends Activity implements ConnectivityReceiver.Connectivit
         boolean isConnected = ConnectivityReceiver.isConnected(context);
         if(!isConnected){
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         return isConnected;
     }
@@ -121,13 +116,13 @@ public class SignIn extends Activity implements ConnectivityReceiver.Connectivit
     public void onNetworkConnectionChanged(boolean isConnected) {
         if(isConnected){
             Intent intent= new Intent(this,MainActivity.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         else{
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
     }
 }

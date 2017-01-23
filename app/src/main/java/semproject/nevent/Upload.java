@@ -130,7 +130,9 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
                                 if (v != null) v.setGravity(Gravity.CENTER);
                                 toast.show();
                                 Intent intent = new Intent(Upload.this, HomePage.class);
+                                intent.putExtra("username",username);
                                 startActivity(intent);
+                                finish();
 
                                 break;
 
@@ -150,11 +152,6 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
                 RequestQueue queue = Volley.newRequestQueue(this);
                 queue.add(uploadRequest);//automatically start the string request on the queue
             }
-            else {
-                Intent intent= new Intent(this,InternetConnection.class);
-                startActivity(intent);
-                finish();
-            }
         }
     }
 
@@ -163,8 +160,8 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
         boolean isConnected = ConnectivityReceiver.isConnected(context);
         if(!isConnected){
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         return isConnected;
     }
@@ -173,13 +170,13 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
     public void onNetworkConnectionChanged(boolean isConnected) {
         if(isConnected){
             Intent intent= new Intent(this,MainActivity.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         else{
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
     }
 }

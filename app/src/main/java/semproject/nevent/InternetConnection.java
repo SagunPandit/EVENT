@@ -15,7 +15,7 @@ public class InternetConnection extends Activity {
 
     public void retry(View view){
         Intent intent= new Intent(this,MainActivity.class);
-        startActivity(intent);
         finish();
+        startActivity(intent);
     }
 }

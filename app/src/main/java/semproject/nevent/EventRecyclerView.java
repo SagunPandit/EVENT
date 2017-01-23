@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,19 +41,21 @@ public class EventRecyclerView {
 
     }
 
-    public void initializeData(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String organizer,Context context) {
-        items.add(new Item(eventid,eventname, eventcategory,eventlocation,eventdate,organizer,context));
+    public void initializeData(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String organizer,Integer viewcount,Context context) {
+        items.add(new Item(eventid,eventname, eventcategory,eventlocation,eventdate,organizer,viewcount,context));
 
     }
 
     public List getItem(){
         return items;
     }
+
     private class Item {
         private String eventId,eventLabel,eventLocation,eventDate,eventOrganizer,eventCategory;
         private Context context;
+        private int viewcount;
 
-        Item(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String eventOrganizer,Context context) {
+        Item(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String eventOrganizer,Integer count,Context context) {
             this.eventId=eventid;
             this.eventLabel=eventname;
             this.eventLocation=eventlocation;
@@ -60,7 +63,37 @@ public class EventRecyclerView {
             this.eventOrganizer=eventOrganizer;
             this.eventCategory=eventcategory;
             this.context=context;
+            viewcount=count;
         }
+    }
+
+    private static void listenerFunction(String eventname,Integer viewcount,final Context context){
+        Log.e("EventRecyclerView","insideListiner");
+        Response.Listener<String> responseListener= new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.e("EventRecyclerView","try");
+                    JSONObject jsonObject=new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if(success){
+                        Log.e("EventRecyclerView","insideSuccess");
+                    }
+                    else {
+                        AlertDialog.Builder builder= new AlertDialog.Builder(context);
+                        builder.setMessage("Connection Failed")
+                                .setNegativeButton("Retry",null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+            CountRequest countRequest=new CountRequest(eventname,viewcount,"incr",responseListener);
+            RequestQueue queue = Volley.newRequestQueue(context);
+            queue.add(countRequest);
     }
 
 
@@ -77,8 +110,8 @@ public class EventRecyclerView {
             boolean isConnected = ConnectivityReceiver.isConnected(currentItem.context);
             if(!isConnected){
                 Intent intent= new Intent(currentItem.context,InternetConnection.class);
-                currentItem.context.startActivity(intent);
                 ((Activity)currentItem.context).finish();
+                currentItem.context.startActivity(intent);
             }
             return isConnected;
         }
@@ -87,13 +120,13 @@ public class EventRecyclerView {
         public void onNetworkConnectionChanged(boolean isConnected) {
             if(isConnected){
                 Intent intent= new Intent(currentItem.context,MainActivity.class);
-                currentItem.context.startActivity(intent);
                 ((Activity)currentItem.context).finish();
+                currentItem.context.startActivity(intent);
             }
             else{
                 Intent intent= new Intent(currentItem.context,InternetConnection.class);
-                currentItem.context.startActivity(intent);
                 ((Activity)currentItem.context).finish();
+                currentItem.context.startActivity(intent);
             }
         }
 
@@ -143,12 +176,6 @@ public class EventRecyclerView {
                         intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
                         currentItem.context.startActivity(intent);
                     }
-                    else{
-                        Intent intent= new Intent(currentItem.context,InternetConnection.class);
-                        currentItem.context.startActivity(intent);
-                        ((Activity)currentItem.context).finish();
-                    }
-
 
                 }
 
@@ -268,8 +295,8 @@ public class EventRecyclerView {
             boolean isConnected = ConnectivityReceiver.isConnected(currentItem.context);
             if(!isConnected){
                 Intent intent= new Intent(currentItem.context,InternetConnection.class);
-                currentItem.context.startActivity(intent);
                 ((Activity)currentItem.context).finish();
+                currentItem.context.startActivity(intent);
             }
             return isConnected;
         }
@@ -313,11 +340,17 @@ public class EventRecyclerView {
             holder.eventDate.setText(currentItem.eventDate);
             holder.eventCategory.setText(currentItem.eventCategory);
             holder.eventOrganizer.setText(currentItem.eventOrganizer);
+            holder.eventView.setText(String.valueOf(currentItem.viewcount));
             holder.eventId.setText(currentItem.eventId);
             holder.eventLinear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(checkConnection()){
+                        Log.e("Count",holder.eventView.getText().toString());
+                        int views=Integer.decode(holder.eventView.getText().toString());
+                        views++;
+                        Log.v("Count",String.valueOf(views));
+                        listenerFunction(holder.eventLabel.getText().toString(),views,currentItem.context);
                         Intent intent=new Intent (currentItem.context,EventDetails.class);
                         intent.putExtra("eventId",holder.eventId.getText().toString());
                         intent.putExtra("eventLabel",holder.eventLabel.getText().toString());
@@ -326,12 +359,7 @@ public class EventRecyclerView {
                         intent.putExtra("eventCategory",holder.eventCategory.getText().toString());
                         intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
                         currentItem.context.startActivity(intent);
-                    }else{
-                        Intent intent= new Intent(currentItem.context,InternetConnection.class);
-                        currentItem.context.startActivity(intent);
-                        ((Activity)currentItem.context).finish();
                     }
-
                 }
             });
 
@@ -353,6 +381,7 @@ public class EventRecyclerView {
             TextView eventOrganizer;
             TextView eventCategory;
             TextView eventId;
+            TextView eventView;
 
             public AllItemViewHolder(View itemView) {
                 super(itemView);
@@ -363,6 +392,7 @@ public class EventRecyclerView {
                 eventLocation = (TextView) itemView.findViewById(R.id.alleventLocation);
                 eventDate=(TextView) itemView.findViewById(R.id.alleventDate);
                 eventOrganizer=(TextView) itemView.findViewById(R.id.alleventOrganizer);
+                eventView= (TextView) itemView.findViewById(R.id.alleventView);
             }
         }
     }

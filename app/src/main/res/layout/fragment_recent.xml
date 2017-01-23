@@ -1,8 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="semproject.nevent.Trending">
+    tools:context="semproject.nevent.Recent">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:id="@+id/trend_recycler_view"
+        android:id="@+id/all_recycler_view"
+
         />
-</RelativeLayout>
+</FrameLayout>

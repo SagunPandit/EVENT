@@ -50,14 +50,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     Toolbar toolbar=null;
     String username;
     Context context;
-    private RecyclerView mRecyclerView;
-    EventRecyclerView eventRecyclerView = new EventRecyclerView();
-    List<String>eventId=new ArrayList<>();
-    List<String>eventList=new ArrayList<>();
-    List<String>eventLocation=new ArrayList<>();
-    List<String>eventDate=new ArrayList<>();
-    List<String>eventCategory=new ArrayList<>();
-    List<String>eventOrganizer=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +61,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             username = intent.getStringExtra("username");
             Button userbutton=(Button)findViewById(R.id.user_button);
             userbutton.setText(username);
-
+/*
 
             RecyclerView.LayoutManager mLayoutManager;
             mRecyclerView = (RecyclerView) findViewById(R.id.all_recycler_view);
@@ -81,17 +73,15 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             // use a linear layout manager
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            listenerFunction(username);
+            listenerFunction(username);*/
 
-
-            // Set the fragments
-            Trending trending=new Trending();
+            Recent recent=new Recent();
+            Bundle bundle = new Bundle();
+            bundle.putString("username", username);
             android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, trending);
+            fragmentTransaction.replace(R.id.fragment_container, recent);
+            recent.setArguments(bundle);
             fragmentTransaction.commit();
-
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +91,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                         .setAction("Action", null).show();
             }
         });*/
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -180,23 +172,33 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         boolean isConnected = ConnectivityReceiver.isConnected(context);
         if(!isConnected){
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         return isConnected;
     }
 
-    public void gopage(View view) {
+    public void trending(View view) {
         if(checkConnection(this)){
-            Intent i=new Intent(this, HomePage.class);
-            i.putExtra("username",username);
-            startActivity(i);
-            finish();
+            Bundle bundle = new Bundle();
+            bundle.putString("username", username);
+            Trending trending=new Trending();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, trending);
+            trending.setArguments(bundle);
+            fragmentTransaction.commit();
         }
-        else {
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
+    }
+
+    public void recent(View view) {
+        if(checkConnection(this)){
+            Recent recent=new Recent();
+            Bundle bundle = new Bundle();
+            bundle.putString("username", username);
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, recent);
+            recent.setArguments(bundle);
+            fragmentTransaction.commit();
         }
     }
 
@@ -206,20 +208,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             i.putExtra("username",username);
             startActivity(i);
         }
-        else {
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
-        }
 
 
-    }
-
-    public void alleventdetails(View view){
-        TextView id=(TextView) findViewById(R.id.alleventId);
-        if (id != null) {
-            Log.e(STRING_TAG,id.getText().toString());
-        }
     }
 
     public void userdetails(View view){
@@ -229,119 +219,20 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             startActivity(intent);
             finish();
         }
-        else {
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
-        }
-    }
-
-    public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
-        Log.e(STRING_TAG,"database");
-        if(checkConnection(this)){
-            for (int i=0;i < eventList.size();i++)
-            {
-                Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem());
-                mRecyclerView.setAdapter(mAdapter);
-            }
-        }
-        else {
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
-        }
-
-    }
-
-
-    public void listenerFunction(String username){
-        Log.e(STRING_TAG,"insideListiner");
-        Response.Listener<String> responseListener= new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    Log.e(STRING_TAG,"try");
-                    JSONObject jsonObject=new JSONObject(response);
-                    boolean success = jsonObject.getBoolean("success");
-                    if(success){
-                        Log.e(STRING_TAG,"insideSuccess");
-                        JSONArray jsonArray = jsonObject.getJSONArray("event_name");
-                        JSONArray jsonArray2 = jsonObject.getJSONArray("location_name");
-                        JSONArray jsonArray3 = jsonObject.getJSONArray("event_date");
-                        JSONArray jsonArray4 = jsonObject.getJSONArray("event_category");
-                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_organizer");
-                        JSONArray jsonArray6 = jsonObject.getJSONArray("event_id");
-                        if (jsonArray != null) {
-                            int len = jsonArray.length();
-                            Log.e(STRING_TAG,Integer.toString(len));
-                            //for eventId
-                            for (int i=0;i<len;i++){
-                                eventId.add(jsonArray6.get(i).toString());
-                            }
-                            //for eventname
-                            for (int i=0;i<len;i++){
-                                eventList.add(jsonArray.get(i).toString());
-                            }
-                            //for eventlocation
-                            for (int i=0;i<len;i++){
-                                eventLocation.add(jsonArray2.get(i).toString());
-                            }
-                            //for eventdate
-                            for (int i=0;i<len;i++){
-                                eventDate.add(jsonArray3.get(i).toString());
-                            }
-                            //for eventcategory
-                            for (int i=0;i<len;i++){
-                                eventCategory.add(jsonArray4.get(i).toString());
-                            }
-                            //for eventorganizer
-                            for (int i=0;i<len;i++){
-                                eventOrganizer.add(jsonArray5.get(i).toString());
-                            }
-
-                            retreiveFromDatabase(eventRecyclerView, mRecyclerView, HomePage.this);
-                        }
-                        else
-                            Log.e(STRING_TAG,"insideNull");
-
-                    }
-                    else {
-                        AlertDialog.Builder builder= new AlertDialog.Builder(HomePage.this);
-                        builder.setMessage("Connection Failed")
-                                .setNegativeButton("Retry",null)
-                                .create()
-                                .show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        if(checkConnection(this)){
-            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"all", responseListener);
-            RequestQueue queue = Volley.newRequestQueue(HomePage.this);
-            queue.add(recyclerRequest);
-        }
-        else {
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
-        }
     }
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         if(isConnected){
             Intent intent= new Intent(this,MainActivity.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         else{
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
+
         }
     }
 }

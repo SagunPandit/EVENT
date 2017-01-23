@@ -2,16 +2,15 @@ package semproject.nevent;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,90 +23,63 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static semproject.nevent.MainActivity.PreferenceFile;
+/**
+ * Created by User on 1/23/2017.
+ */
 
-public class UserDetails extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener  {
-    final String STRING_TAG = "UserDetails";
-    SharedPreferences sharedpreferences;
+public class Recent extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener{
     private RecyclerView mRecyclerView;
+    String STRING_TAG="RECENT";
     String username;
-    EventRecyclerView eventRecyclerView = new EventRecyclerView();
+    List<String> eventId=new ArrayList<>();
     List<String>eventList=new ArrayList<>();
     List<String>eventLocation=new ArrayList<>();
     List<String>eventDate=new ArrayList<>();
     List<String>eventCategory=new ArrayList<>();
-    List<String>eventId=new ArrayList<>();
+    List<String>eventOrganizer=new ArrayList<>();
     List<Integer>viewcount=new ArrayList<>();
+    EventRecyclerView eventRecyclerView = new EventRecyclerView();
+
+    public Recent() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_details);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        username = getArguments().getString("username");
+        View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
 
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username");
-
+        // BEGIN_INCLUDE(initializeRecyclerView)
         RecyclerView.LayoutManager mLayoutManager;
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_recycler_view);
         if (mRecyclerView != null) {
             mRecyclerView.setHasFixedSize(true);
         }
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+
+
+        // LinearLayoutManager is used here, this will layout the elements in a similar fashion
+        // to the way ListView would layout elements. The RecyclerView.LayoutManager defines how
+        // elements are laid out.
+        mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
+        listenerFunction(username);
+        return rootView;
     }
-    public void viewevents(View view){
-        if(checkConnection(this)){
-            listenerFunction(username);
-        }
-    }
-
-    public void eventdetails(View view){
-        TextView id=(TextView) findViewById(R.id.eventId);
-        if (id != null) {
-            Log.e(STRING_TAG,id.getText().toString());
-        }
-    }
-    public void logout(View view){
-        if(checkConnection(this)){
-            sharedpreferences = getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.clear();
-            editor.apply();
-            Intent intent= new Intent(UserDetails.this,MainActivity.class);
-            finish();
-            startActivity(intent);
-        }
-    }
-
-    private boolean checkConnection(Context context) {
-        Log.e(STRING_TAG,"checkConnection");
-        boolean isConnected = ConnectivityReceiver.isConnected(context);
-        if(!isConnected){
-            Intent intent= new Intent(this,InternetConnection.class);
-            finish();
-            startActivity(intent);
-        }
-        return isConnected;
-    }
-
     public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
         Log.e(STRING_TAG,"database");
-        if(checkConnection(this)){
+        if(checkConnection(getContext())){
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(context, eventRecyclerView.getItem());
+                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
+                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem());
                 mRecyclerView.setAdapter(mAdapter);
             }
         }
 
     }
-
     public void listenerFunction(String username){
         Log.e(STRING_TAG,"insideListiner");
         Response.Listener<String> responseListener= new Response.Listener<String>() {
@@ -123,14 +95,15 @@ public class UserDetails extends AppCompatActivity implements ConnectivityReceiv
                         JSONArray jsonArray2 = jsonObject.getJSONArray("location_name");
                         JSONArray jsonArray3 = jsonObject.getJSONArray("event_date");
                         JSONArray jsonArray4 = jsonObject.getJSONArray("event_category");
-                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_id");
+                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_organizer");
+                        JSONArray jsonArray6 = jsonObject.getJSONArray("event_id");
                         JSONArray jsonArray7 = jsonObject.getJSONArray("viewcount");
                         if (jsonArray != null) {
                             int len = jsonArray.length();
                             Log.e(STRING_TAG,Integer.toString(len));
-                            //for eventid
+                            //for eventId
                             for (int i=0;i<len;i++){
-                                eventId.add(jsonArray5.get(i).toString());
+                                eventId.add(jsonArray6.get(i).toString());
                             }
                             //for eventname
                             for (int i=0;i<len;i++){
@@ -148,19 +121,23 @@ public class UserDetails extends AppCompatActivity implements ConnectivityReceiv
                             for (int i=0;i<len;i++){
                                 eventCategory.add(jsonArray4.get(i).toString());
                             }
+                            //for eventorganizer
+                            for (int i=0;i<len;i++){
+                                eventOrganizer.add(jsonArray5.get(i).toString());
+                            }
                             //for count
                             for (int i=0;i<len;i++){
                                 viewcount.add((Integer) jsonArray7.get(i));
                             }
 
-                            retreiveFromDatabase(eventRecyclerView, mRecyclerView, UserDetails.this);
+                            retreiveFromDatabase(eventRecyclerView, mRecyclerView, getContext());
                         }
                         else
                             Log.e(STRING_TAG,"insideNull");
 
                     }
                     else {
-                        AlertDialog.Builder builder= new AlertDialog.Builder(UserDetails.this);
+                        AlertDialog.Builder builder= new AlertDialog.Builder(getContext());
                         builder.setMessage("Connection Failed")
                                 .setNegativeButton("Retry",null)
                                 .create()
@@ -171,26 +148,35 @@ public class UserDetails extends AppCompatActivity implements ConnectivityReceiv
                 }
             }
         };
-        if(checkConnection(this)){
-            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"own",responseListener);
-            RequestQueue queue = Volley.newRequestQueue(UserDetails.this);
+        if(checkConnection(getContext())){
+            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"all", responseListener);
+            RequestQueue queue = Volley.newRequestQueue(getContext());
             queue.add(recyclerRequest);
         }
     }
 
-
+    private boolean checkConnection(Context context) {
+        Log.e(STRING_TAG,"checkConnection");
+        boolean isConnected = ConnectivityReceiver.isConnected(context);
+        if(!isConnected){
+            Intent intent= new Intent(getContext(),InternetConnection.class);
+            getActivity().finish();
+            startActivity(intent);
+        }
+        return isConnected;
+    }
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         if(isConnected){
-            Intent intent= new Intent(this,MainActivity.class);
-            finish();
+            Intent intent= new Intent(getContext(),MainActivity.class);
+            getActivity().finish();
             startActivity(intent);
         }
         else{
-            Intent intent= new Intent(this,InternetConnection.class);
-            finish();
+            Intent intent= new Intent(getContext(),InternetConnection.class);
+            getActivity().finish();
             startActivity(intent);
+
         }
     }
-
 }

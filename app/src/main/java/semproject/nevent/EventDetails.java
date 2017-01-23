@@ -90,11 +90,6 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
             RequestQueue queue = Volley.newRequestQueue(EventDetails.this);
             queue.add(detailRequest);
         }
-        else {
-            Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
-            finish();
-        }
     }
 
     private boolean checkConnection(Context context) {
@@ -102,8 +97,8 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
         boolean isConnected = ConnectivityReceiver.isConnected(context);
         if(!isConnected){
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         return isConnected;
     }
@@ -112,13 +107,13 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
     public void onNetworkConnectionChanged(boolean isConnected) {
         if(isConnected){
             Intent intent= new Intent(this,MainActivity.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
         else{
             Intent intent= new Intent(this,InternetConnection.class);
-            startActivity(intent);
             finish();
+            startActivity(intent);
         }
     }
 }
