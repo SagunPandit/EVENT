@@ -24,7 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -273,21 +276,23 @@ public class EventRecyclerView {
         }
     }
 
-
     //For all users
     public static class AllItemAdapter extends RecyclerView.Adapter<AllItemAdapter.AllItemViewHolder>implements ConnectivityReceiver.ConnectivityReceiverListener{
         String STRING_TAG= "ItemAdapter";
+        String[] admin={"Aayush","Sagun","Pratyush","Avash","Prabin"};
         /* private instance variable to store Layout of each item. */
         private LayoutInflater inflater;
         /* Store data */
         List<Item> items = Collections.emptyList();
         Item currentItem;
+        String username;
 
 
         // Constructor to inflate layout of each item in RecyclerView
-        public AllItemAdapter(Context context, List<Item> items) {
+        public AllItemAdapter(Context context, List<Item> items, String name) {
             inflater = LayoutInflater.from(context);
             this.items = items;
+            username=name;
         }
 
         private boolean checkConnection() {
@@ -327,7 +332,7 @@ public class EventRecyclerView {
         }
 
         @Override
-        public void onBindViewHolder(final AllItemViewHolder holder, int position) {
+        public void onBindViewHolder(final AllItemViewHolder holder,final int position) {
             Log.v(LOG_TAG, "onBindViewHolder called.");
             String defaultLabel="Activity";
             currentItem = items.get(position);
@@ -362,8 +367,73 @@ public class EventRecyclerView {
                     }
                 }
             });
+            Log.v(STRING_TAG,username);
+            if (Arrays.asList(admin).contains(username)) {
+                holder.eventDelete.setVisibility(View.VISIBLE);
+                holder.eventDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.v(LOG_TAG, "Item Clicked.");
+                        removeAt(position, currentItem);
+                    }
+                });
+            }
+            // click event handler when Item in RecyclerView is clicked
 
         }
+        public void removeAt(final int position, final Item item) {
+            AlertDialog.Builder builder= new AlertDialog.Builder(item.context);
+            builder.setMessage("Do you really want to delete this event?")
+                    .setTitle("Confirmation")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            items.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, items.size());
+                            deleteFunction(item);
+                        }
+                    })
+                    .setNegativeButton("NO",null)
+                    .create()
+                    .show();
+
+        }
+
+        public void deleteFunction(Item item){
+            final Context context=item.context;
+            Log.e(STRING_TAG,"insideListiner");
+            Response.Listener<String> responseListener= new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        Log.e(STRING_TAG,"try");
+                        JSONObject jsonObject=new JSONObject(response);
+                        boolean success = jsonObject.getBoolean("success");
+                        if(success){
+                            Log.e(STRING_TAG,"insideSuccess");
+                            String toastMesg = "You have sucessfully deleted an event.";
+                            Toast toast = Toast.makeText(context, toastMesg, Toast.LENGTH_SHORT);
+                            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                            if (v != null) v.setGravity(Gravity.CENTER);
+                            toast.show();
+                        }
+                        else {
+                            AlertDialog.Builder builder= new AlertDialog.Builder(context);
+                            builder.setMessage("Connection Failed")
+                                    .setNegativeButton("Retry",null)
+                                    .create()
+                                    .show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            DeleteRequest deleteRequest=new DeleteRequest(item.eventOrganizer,item.eventLabel,item.eventDate,item.eventCategory,item.eventLocation, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(context);
+            queue.add(deleteRequest);
+        }
+
 
 
 
@@ -382,6 +452,7 @@ public class EventRecyclerView {
             TextView eventCategory;
             TextView eventId;
             TextView eventView;
+            ImageButton eventDelete;
 
             public AllItemViewHolder(View itemView) {
                 super(itemView);
@@ -393,6 +464,7 @@ public class EventRecyclerView {
                 eventDate=(TextView) itemView.findViewById(R.id.alleventDate);
                 eventOrganizer=(TextView) itemView.findViewById(R.id.alleventOrganizer);
                 eventView= (TextView) itemView.findViewById(R.id.alleventView);
+                eventDelete=(ImageButton) itemView.findViewById(R.id.alleventDelete);
             }
         }
     }

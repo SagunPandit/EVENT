@@ -2,8 +2,9 @@ package semproject.nevent;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,37 +26,37 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static semproject.nevent.MainActivity.PreferenceFile;
+
 /**
- * Created by User on 1/23/2017.
+ * Created by User on 1/29/2017.
  */
 
-public class Recent extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener{
+public class Userdetail extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
+    String STRING_TAG="Userdetail";
+    SharedPreferences sharedpreferences;
     private RecyclerView mRecyclerView;
-    String STRING_TAG="RECENT";
     String username;
-    List<String> eventId=new ArrayList<>();
-    List<String>eventList=new ArrayList<>();
+    EventRecyclerView eventRecyclerView = new EventRecyclerView();
+    List<String> eventList=new ArrayList<>();
     List<String>eventLocation=new ArrayList<>();
     List<String>eventDate=new ArrayList<>();
     List<String>eventCategory=new ArrayList<>();
-    List<String>eventOrganizer=new ArrayList<>();
+    List<String>eventId=new ArrayList<>();
     List<Integer>viewcount=new ArrayList<>();
-    EventRecyclerView eventRecyclerView = new EventRecyclerView();
+    boolean display=true;
 
-    public Recent() {
-        // Required empty public constructor
-    }
-
+    public Userdetail(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         username = getArguments().getString("username");
-        View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_userdetails, container, false);
 
         // BEGIN_INCLUDE(initializeRecyclerView)
         RecyclerView.LayoutManager mLayoutManager;
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_recycler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.user_recycler_view);
         if (mRecyclerView != null) {
             mRecyclerView.setHasFixedSize(true);
         }
@@ -64,24 +67,54 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
         // elements are laid out.
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        listenerFunction(username);
+
+        Button userevents=(Button) rootView.findViewById(R.id.userevents);
+        userevents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(display){
+                    if(checkConnection(getContext())){
+                        userListener(username);
+                    }
+                    display=false;
+                }
+
+            }
+        });
+
+        Button userlogout=(Button) rootView.findViewById(R.id.userlogout);
+        userlogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkConnection(getContext())){
+                    sharedpreferences = getActivity().getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    Intent intent= new Intent(getContext(),MainActivity.class);
+                    getActivity().finish();
+                    startActivity(intent);
+                }
+            }
+        });
         return rootView;
     }
+
     public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
         Log.e(STRING_TAG,"database");
-        if(checkConnection(getContext())){
+        if(checkConnection(context)){
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem(),username);
+                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),context);
+                RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(context, eventRecyclerView.getItem());
                 mRecyclerView.setAdapter(mAdapter);
             }
         }
 
     }
 
-    public void listenerFunction(String username){
+    public void userListener(String username){
         Log.e(STRING_TAG,"insideListiner");
         Response.Listener<String> responseListener= new Response.Listener<String>() {
             @Override
@@ -96,15 +129,14 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                         JSONArray jsonArray2 = jsonObject.getJSONArray("location_name");
                         JSONArray jsonArray3 = jsonObject.getJSONArray("event_date");
                         JSONArray jsonArray4 = jsonObject.getJSONArray("event_category");
-                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_organizer");
-                        JSONArray jsonArray6 = jsonObject.getJSONArray("event_id");
+                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_id");
                         JSONArray jsonArray7 = jsonObject.getJSONArray("viewcount");
                         if (jsonArray != null) {
                             int len = jsonArray.length();
                             Log.e(STRING_TAG,Integer.toString(len));
-                            //for eventId
+                            //for eventid
                             for (int i=0;i<len;i++){
-                                eventId.add(jsonArray6.get(i).toString());
+                                eventId.add(jsonArray5.get(i).toString());
                             }
                             //for eventname
                             for (int i=0;i<len;i++){
@@ -121,10 +153,6 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                             //for eventcategory
                             for (int i=0;i<len;i++){
                                 eventCategory.add(jsonArray4.get(i).toString());
-                            }
-                            //for eventorganizer
-                            for (int i=0;i<len;i++){
-                                eventOrganizer.add(jsonArray5.get(i).toString());
                             }
                             //for count
                             for (int i=0;i<len;i++){
@@ -150,11 +178,12 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
             }
         };
         if(checkConnection(getContext())){
-            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"all", responseListener);
+            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"own",responseListener);
             RequestQueue queue = Volley.newRequestQueue(getContext());
             queue.add(recyclerRequest);
         }
     }
+
 
     private boolean checkConnection(Context context) {
         Log.e(STRING_TAG,"checkConnection");

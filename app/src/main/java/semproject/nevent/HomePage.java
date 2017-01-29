@@ -214,10 +214,18 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
     public void userdetails(View view){
         if(checkConnection(this)){
-            Intent intent = new Intent(this, UserDetails.class);
+            /*Intent intent = new Intent(this, UserDetails.class);
             intent.putExtra("username",username);
             startActivity(intent);
-            finish();
+            finish();*/
+
+            Bundle bundle = new Bundle();
+            bundle.putString("username", username);
+            Userdetail userDetails=new Userdetail();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, userDetails);
+            userDetails.setArguments(bundle);
+            fragmentTransaction.commit();
         }
     }
 

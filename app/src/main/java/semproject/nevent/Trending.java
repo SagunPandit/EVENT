@@ -68,6 +68,7 @@ public class Trending extends Fragment implements ConnectivityReceiver.Connectiv
         trendListener(username);
         return rootView;
     }
+
     public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
         Log.e(STRING_TAG,"database");
         if(checkConnection(getContext())){
@@ -75,7 +76,7 @@ public class Trending extends Fragment implements ConnectivityReceiver.Connectiv
             {
                 Log.i("Value of element "+i,eventList.get(i));
                 eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem());
+                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem(),username);
                 mRecyclerView.setAdapter(mAdapter);
             }
         }

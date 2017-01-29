@@ -2,15 +2,16 @@ package semproject.nevent;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,58 +24,84 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by User on 1/23/2017.
- */
+import static semproject.nevent.MainActivity.PreferenceFile;
 
-public class Recent extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener{
+/*public class UserDetails extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener  {
+    final String STRING_TAG = "UserDetails";
+    SharedPreferences sharedpreferences;
     private RecyclerView mRecyclerView;
-    String STRING_TAG="RECENT";
     String username;
-    List<String> eventId=new ArrayList<>();
+    EventRecyclerView eventRecyclerView = new EventRecyclerView();
     List<String>eventList=new ArrayList<>();
     List<String>eventLocation=new ArrayList<>();
     List<String>eventDate=new ArrayList<>();
     List<String>eventCategory=new ArrayList<>();
-    List<String>eventOrganizer=new ArrayList<>();
+    List<String>eventId=new ArrayList<>();
     List<Integer>viewcount=new ArrayList<>();
-    EventRecyclerView eventRecyclerView = new EventRecyclerView();
-
-    public Recent() {
-        // Required empty public constructor
-    }
-
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        username = getArguments().getString("username");
-        View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_details);
 
-        // BEGIN_INCLUDE(initializeRecyclerView)
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
+
         RecyclerView.LayoutManager mLayoutManager;
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
         if (mRecyclerView != null) {
             mRecyclerView.setHasFixedSize(true);
         }
-
-
-        // LinearLayoutManager is used here, this will layout the elements in a similar fashion
-        // to the way ListView would layout elements. The RecyclerView.LayoutManager defines how
-        // elements are laid out.
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        listenerFunction(username);
-        return rootView;
+
     }
+    public void viewevents(View view){
+        if(checkConnection(this)){
+            listenerFunction(username);
+        }
+    }
+
+    public void eventdetails(View view){
+        TextView id=(TextView) findViewById(R.id.eventId);
+        if (id != null) {
+            Log.e(STRING_TAG,id.getText().toString());
+        }
+    }
+    public void logout(View view){
+        if(checkConnection(this)){
+            sharedpreferences = getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.clear();
+            editor.apply();
+            Intent intent= new Intent(UserDetails.this,MainActivity.class);
+            finish();
+            startActivity(intent);
+        }
+    }
+
+    private boolean checkConnection(Context context) {
+        Log.e(STRING_TAG,"checkConnection");
+        boolean isConnected = ConnectivityReceiver.isConnected(context);
+        if(!isConnected){
+            Intent intent= new Intent(this,InternetConnection.class);
+            finish();
+            startActivity(intent);
+        }
+        return isConnected;
+    }
+
     public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
         Log.e(STRING_TAG,"database");
-        if(checkConnection(getContext())){
+        if(checkConnection(this)){
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem(),username);
+                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),context);
+                RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(context, eventRecyclerView.getItem());
                 mRecyclerView.setAdapter(mAdapter);
             }
         }
@@ -96,15 +123,14 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                         JSONArray jsonArray2 = jsonObject.getJSONArray("location_name");
                         JSONArray jsonArray3 = jsonObject.getJSONArray("event_date");
                         JSONArray jsonArray4 = jsonObject.getJSONArray("event_category");
-                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_organizer");
-                        JSONArray jsonArray6 = jsonObject.getJSONArray("event_id");
+                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_id");
                         JSONArray jsonArray7 = jsonObject.getJSONArray("viewcount");
                         if (jsonArray != null) {
                             int len = jsonArray.length();
                             Log.e(STRING_TAG,Integer.toString(len));
-                            //for eventId
+                            //for eventid
                             for (int i=0;i<len;i++){
-                                eventId.add(jsonArray6.get(i).toString());
+                                eventId.add(jsonArray5.get(i).toString());
                             }
                             //for eventname
                             for (int i=0;i<len;i++){
@@ -122,23 +148,19 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                             for (int i=0;i<len;i++){
                                 eventCategory.add(jsonArray4.get(i).toString());
                             }
-                            //for eventorganizer
-                            for (int i=0;i<len;i++){
-                                eventOrganizer.add(jsonArray5.get(i).toString());
-                            }
                             //for count
                             for (int i=0;i<len;i++){
                                 viewcount.add((Integer) jsonArray7.get(i));
                             }
 
-                            retreiveFromDatabase(eventRecyclerView, mRecyclerView, getContext());
+                            retreiveFromDatabase(eventRecyclerView, mRecyclerView, UserDetails.this);
                         }
                         else
                             Log.e(STRING_TAG,"insideNull");
 
                     }
                     else {
-                        AlertDialog.Builder builder= new AlertDialog.Builder(getContext());
+                        AlertDialog.Builder builder= new AlertDialog.Builder(UserDetails.this);
                         builder.setMessage("Connection Failed")
                                 .setNegativeButton("Retry",null)
                                 .create()
@@ -149,35 +171,26 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                 }
             }
         };
-        if(checkConnection(getContext())){
-            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"all", responseListener);
-            RequestQueue queue = Volley.newRequestQueue(getContext());
+        if(checkConnection(this)){
+            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"own",responseListener);
+            RequestQueue queue = Volley.newRequestQueue(UserDetails.this);
             queue.add(recyclerRequest);
         }
     }
 
-    private boolean checkConnection(Context context) {
-        Log.e(STRING_TAG,"checkConnection");
-        boolean isConnected = ConnectivityReceiver.isConnected(context);
-        if(!isConnected){
-            Intent intent= new Intent(getContext(),InternetConnection.class);
-            getActivity().finish();
-            startActivity(intent);
-        }
-        return isConnected;
-    }
+
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         if(isConnected){
-            Intent intent= new Intent(getContext(),MainActivity.class);
-            getActivity().finish();
+            Intent intent= new Intent(this,MainActivity.class);
+            finish();
             startActivity(intent);
         }
         else{
-            Intent intent= new Intent(getContext(),InternetConnection.class);
-            getActivity().finish();
+            Intent intent= new Intent(this,InternetConnection.class);
+            finish();
             startActivity(intent);
-
         }
     }
-}
+
+}*/
