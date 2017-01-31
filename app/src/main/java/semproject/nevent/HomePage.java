@@ -131,11 +131,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Bundle bundle = new Bundle();
+        bundle.putString("username", username);
         if (id == R.id.nav_sports) {
             Sports sports=new Sports();
             android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, sports);
+            sports.setArguments(bundle);
             fragmentTransaction.commit();
 
             // Handle the camera action
@@ -143,6 +145,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             Parties parties=new Parties();
             android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, parties);
+            parties.setArguments(bundle);
             fragmentTransaction.commit();
 
 
@@ -150,6 +153,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             Conference conference=new Conference();
             android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, conference);
+            conference.setArguments(bundle);
             fragmentTransaction.commit();
 
 
@@ -157,6 +161,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             Donations donations=new Donations();
             android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, donations);
+            donations.setArguments(bundle);
             fragmentTransaction.commit();
 
 

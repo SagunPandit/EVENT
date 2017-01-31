@@ -14,7 +14,7 @@
 
     function getid()
     {
-        global $connect, $usernameorid, $userid;
+        global $connect, $usernameorid;
         $statement= mysqli_prepare($connect,"SELECT user_id FROM user WHERE username=?");
         mysqli_stmt_bind_param($statement, "s", $usernameorid);
         mysqli_stmt_execute($statement);
@@ -24,7 +24,6 @@
         while(mysqli_stmt_fetch($statement)){
             $inuser= $id;
         }
-        $userid= $inuser;
         return $inuser;
 
     }
@@ -56,13 +55,14 @@
         $eventdate = array();
         $eventcategory = array();
         $eventid= array();
+        $viewcount=array();
         $i=0;
-        $statement = mysqli_prepare($connect, "SELECT *FROM upload WHERE user_id = ?"); 
+        $statement = mysqli_prepare($connect, "SELECT * FROM upload WHERE user_id = ? ORDER BY upload_id DESC"); 
         mysqli_stmt_bind_param($statement, "i", $id);
         mysqli_stmt_execute($statement);
         mysqli_stmt_store_result($statement);
         $count = mysqli_stmt_num_rows($statement);
-        mysqli_stmt_bind_result($statement,$uid,$ename,$location,$dates,$category_name,$userid,$details,$time);
+        mysqli_stmt_bind_result($statement,$uid,$ename,$location,$dates,$category_name,$userid,$details,$ecount,$time);
         
         while(mysqli_stmt_fetch($statement)){
         	$locationname[$i]=$location;
@@ -70,6 +70,7 @@
             	$eventdate[$i]=$dates;
             	$eventcategory[$i]=$category_name ;
             	$eventid[$i]=$uid;
+            	$viewcount[$i]=$ecount;
             	$i++;
         }
         mysqli_stmt_close($statement); 
@@ -79,6 +80,7 @@
         $response["location_name"]=$locationname;
         $response["event_date"]=$eventdate;
         $response["event_category"]=$eventcategory;
+        $response["viewcount"]=$viewcount;
         $response["success"]=true;
           
     }
@@ -107,13 +109,14 @@
         $eventcategory = array();
         $eventorganizer = array();
         $eventid= array();
+        $viewcount= array();
         $i=0;
-        $statement = mysqli_prepare($connect, "SELECT * FROM upload "); 
+        $statement = mysqli_prepare($connect, "SELECT * FROM upload ORDER BY upload_id DESC"); 
         mysqli_stmt_bind_param($statement, "i", $id);
         mysqli_stmt_execute($statement);
         mysqli_stmt_store_result($statement);
         $count = mysqli_stmt_num_rows($statement);
-        mysqli_stmt_bind_result($statement,$uid,$ename,$location,$dates,$category_name,$userid,$details,$time);
+        mysqli_stmt_bind_result($statement,$uid,$ename,$location,$dates,$category_name,$userid,$details,$ecount,$time);
         
         while(mysqli_stmt_fetch($statement)){
         	$locationname[$i]=$location;
@@ -122,6 +125,7 @@
             	$eventcategory[$i]=$category_name ;
             	$eventid[$i]=$uid;
             	$eventorganizer[$i]=getorganizer($userid);
+            	$viewcount[$i]=$ecount;
             	$i++;
         }
         mysqli_stmt_close($statement); 
@@ -132,16 +136,150 @@
         $response["event_date"]=$eventdate;
         $response["event_category"]=$eventcategory;
         $response["event_organizer"]=$eventorganizer;
+        $response["viewcount"]=$viewcount;
         $response["success"]=true;
           
     }
     
-    if($check_code=="own")
+    function gettrend() {
+    	global $connect, $response;
+        $reventname = array();
+        $locationname = array();
+        $eventdate = array();
+        $eventcategory = array();
+        $eventorganizer = array();
+        $eventid= array();
+        $viewcount= array();
+        $i=0;
+        $statement = mysqli_prepare($connect, "SELECT * FROM upload ORDER BY count DESC"); 
+        mysqli_stmt_bind_param($statement, "i", $id);
+        mysqli_stmt_execute($statement);
+        mysqli_stmt_store_result($statement);
+        $count = mysqli_stmt_num_rows($statement);
+        mysqli_stmt_bind_result($statement,$uid,$ename,$location,$dates,$category_name,$userid,$details,$ecount,$time);
+        
+        while(mysqli_stmt_fetch($statement)){
+        	$locationname[$i]=$location;
+            	$reventname[$i]=$ename;
+            	$eventdate[$i]=$dates;
+            	$eventcategory[$i]=$category_name ;
+            	$eventid[$i]=$uid;
+            	$eventorganizer[$i]=getorganizer($userid);
+            	$viewcount[$i]=$ecount;
+            	$i++;
+        }
+        mysqli_stmt_close($statement); 
+        
+        $response["event_id"]=$eventid;
+        $response["event_name"]=$reventname;
+        $response["location_name"]=$locationname;
+        $response["event_date"]=$eventdate;
+        $response["event_category"]=$eventcategory;
+        $response["event_organizer"]=$eventorganizer;
+        $response["viewcount"]=$viewcount;
+        $response["success"]=true;
+          
+    }
+    
+    
+   function incrcount(){
+   	global $connect, $response,$usernameorid;
+   	$strcount=$_POST["viewcount"];
+   	$count=(int)$strcount;
+   	$statement = mysqli_prepare($connect, "UPDATE upload SET count= ? WHERE event_name= ?");
+        mysqli_stmt_bind_param($statement, "is",$count,$usernameorid);
+        mysqli_stmt_execute($statement);
+   	$response["success"]=true;
+   
+   
+   }
+   
+   function gettypes($types){
+   	global $connect, $response;
+        $reventname = array();
+        $locationname = array();
+        $eventdate = array();
+        $eventcategory = array();
+        $eventorganizer = array();
+        $eventid= array();
+        $viewcount= array();
+        $i=0;
+        $statement = mysqli_prepare($connect, "SELECT * FROM upload WHERE category_name= ? ORDER BY count DESC"); 
+        mysqli_stmt_bind_param($statement, "s", $types);
+        mysqli_stmt_execute($statement);
+        mysqli_stmt_store_result($statement);
+        $count = mysqli_stmt_num_rows($statement);
+        mysqli_stmt_bind_result($statement,$uid,$ename,$location,$dates,$category_name,$userid,$details,$ecount,$time);
+        
+        while(mysqli_stmt_fetch($statement)){
+        	$locationname[$i]=$location;
+            	$reventname[$i]=$ename;
+            	$eventdate[$i]=$dates;
+            	$eventcategory[$i]=$category_name ;
+            	$eventid[$i]=$uid;
+            	$eventorganizer[$i]=getorganizer($userid);
+            	$viewcount[$i]=$ecount;
+            	$i++;
+        }
+        mysqli_stmt_close($statement); 
+        
+        $response["event_id"]=$eventid;
+        $response["event_name"]=$reventname;
+        $response["location_name"]=$locationname;
+        $response["event_date"]=$eventdate;
+        $response["event_category"]=$eventcategory;
+        $response["event_organizer"]=$eventorganizer;
+        $response["viewcount"]=$viewcount;
+        $response["success"]=true;
+   }
+   
+   switch($check_code){
+   	case "own":
+	getevent(getid());
+	break;
+    	
+    	case "details":
+        getdetails();
+        break;
+    	
+    	case "trending":
+        gettrend();
+        break;
+        
+        case "incr":
+        incrcount();
+        break;
+    	
+    	case "conference":
+        gettypes("Conference");
+        break;
+        
+        case "parties":
+        gettypes("Parties");
+        break;
+        
+        case "sports":
+        gettypes("Sports");
+        break;
+        
+        case "donations":
+        gettypes("Donations");
+        break;
+        
+    	default:
+        getall();
+   }
+   
+   /*if($check_code=="own")
     	getevent(getid());
     elseif($check_code=="details")
     	getdetails();
+    elseif($check_code=="trending")
+    	gettrend();
+    elseif($check_code=="incr")
+    	incrcount();
     else
-    	getall();
+        getall();*/
   
     echo json_encode($response);
 ?>

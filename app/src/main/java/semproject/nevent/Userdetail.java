@@ -68,7 +68,7 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        Button userevents=(Button) rootView.findViewById(R.id.userevents);
+        final Button userevents=(Button) rootView.findViewById(R.id.userevents);
         userevents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +76,7 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
                     if(checkConnection(getContext())){
                         userListener(username);
                     }
+                    userevents.setVisibility(View.GONE);
                     display=false;
                 }
 
@@ -184,7 +185,6 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
         }
     }
 
-
     private boolean checkConnection(Context context) {
         Log.e(STRING_TAG,"checkConnection");
         boolean isConnected = ConnectivityReceiver.isConnected(context);
@@ -195,6 +195,7 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
         }
         return isConnected;
     }
+
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         if(isConnected){
