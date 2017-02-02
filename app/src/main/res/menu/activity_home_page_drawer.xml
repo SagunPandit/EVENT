@@ -4,9 +4,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_sports"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Sports" />
+        android:id="@+id/nav_sports"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Sports" />
         <item
             android:id="@+id/nav_parties"
             android:icon="@drawable/ic_menu_gallery"
@@ -19,6 +19,34 @@
             android:id="@+id/nav_donations"
             android:icon="@drawable/ic_menu_manage"
             android:title="Donations" />
+
+        <item
+            android:id="@+id/nav_gaming"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Gaming" />
+
+        <item
+            android:id="@+id/nav_exhibition"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Exhibition" />
+        <item
+            android:id="@+id/nav_educational"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Educational" />
+
+        <item
+        android:id="@+id/nav_business"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="Business" />
+
+        <item
+            android:id="@+id/nav_concert"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Concert" />
+        <item
+            android:id="@+id/nav_others"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Others" />
     </group>
 
 </menu>

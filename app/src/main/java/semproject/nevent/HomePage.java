@@ -171,6 +171,62 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         }
 
+        else if (id == R.id.nav_others) {
+            Others others=new Others();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, others);
+            others.setArguments(bundle);
+            fragmentTransaction.commit();
+
+
+        }
+        else if (id == R.id.nav_business) {
+            Business business=new Business();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, business);
+            business.setArguments(bundle);
+            fragmentTransaction.commit();
+
+
+        }
+        else if (id == R.id.nav_concert) {
+            Concert concert=new Concert();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, concert);
+            concert.setArguments(bundle);
+            fragmentTransaction.commit();
+
+
+        }
+
+        else if (id == R.id.nav_educational) {
+            Educational educational=new Educational();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, educational);
+            educational.setArguments(bundle);
+            fragmentTransaction.commit();
+
+
+        }
+        else if (id == R.id.nav_exhibition) {
+            Exhibition exhibition=new Exhibition();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, exhibition);
+            exhibition.setArguments(bundle);
+            fragmentTransaction.commit();
+
+
+        }
+        else if (id == R.id.nav_gaming) {
+            Gaming gaming=new Gaming();
+            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, gaming);
+            gaming.setArguments(bundle);
+            fragmentTransaction.commit();
+
+
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
