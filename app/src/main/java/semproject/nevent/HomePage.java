@@ -92,7 +92,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             }
         });*/
             toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+             setSupportActionBar(toolbar);
+             getSupportActionBar().setDisplayShowTitleEnabled(false);
+             toolbar.setLogo(R.drawable.logo);
+
+
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
