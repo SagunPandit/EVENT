@@ -10,13 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="semproject.nevent.MainActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/avash"/>
 
-    <!--<TextView
-        android:text="Splash Screen"
+    <TextView
+        android:text="Loading..."
         android:textSize="40sp"
 
         android:layout_height="wrap_content"
@@ -24,6 +20,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="14dp"
-        android:id="@+id/textView2" />-->
+        android:id="@+id/textView2" />
 
 </RelativeLayout>

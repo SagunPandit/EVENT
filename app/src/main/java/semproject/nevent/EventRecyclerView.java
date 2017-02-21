@@ -187,14 +187,17 @@ public class EventRecyclerView {
                 @Override
                 public void onClick(View v) {
                     Log.v(LOG_TAG, "Item Clicked.");
-                    removeAt(position,currentItem);
+                    Log.v(LOG_TAG,holder.eventLabel.getText().toString());
+                    Log.v(LOG_TAG+" delete",Integer.toString(position));
+                    removeAt(position,currentItem,holder);
                 }
             });
             // click event handler when Item in RecyclerView is clicked
 
         }
-        public void removeAt(final int position, final Item item) {
-            AlertDialog.Builder builder= new AlertDialog.Builder(item.context);
+        public void removeAt(final int position, final Item item,final ItemViewHolder holder ) {
+            final Context context=item.context;
+            AlertDialog.Builder builder= new AlertDialog.Builder(context);
             builder.setMessage("Do you really want to delete this event?")
                     .setTitle("Confirmation")
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -202,7 +205,7 @@ public class EventRecyclerView {
                             items.remove(position);
                             notifyItemRemoved(position);
                             notifyItemRangeChanged(position, items.size());
-                            listenerFunction(item);
+                            listenerFunction(context,holder);
                         }
                     })
                     .setNegativeButton("NO",null)
@@ -211,8 +214,7 @@ public class EventRecyclerView {
 
         }
 
-        public void listenerFunction(Item item){
-            final Context context=item.context;
+        public void listenerFunction(final Context context,final ItemViewHolder holder){
             Log.e(STRING_TAG,"insideListiner");
             Response.Listener<String> responseListener= new Response.Listener<String>() {
                 @Override
@@ -241,7 +243,12 @@ public class EventRecyclerView {
                     }
                 }
             };
-            DeleteRequest deleteRequest=new DeleteRequest(item.eventOrganizer,item.eventLabel,item.eventDate,item.eventCategory,item.eventLocation, responseListener);
+            DeleteRequest deleteRequest=new DeleteRequest(holder.eventOrganizer.getText().toString()
+                    ,holder.eventLabel.getText().toString()
+                    ,holder.eventDate.getText().toString()
+                    ,holder.eventCategory.getText().toString()
+                    ,holder.eventLocation.getText().toString()
+                    ,responseListener);
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.add(deleteRequest);
         }
@@ -374,15 +381,17 @@ public class EventRecyclerView {
                     @Override
                     public void onClick(View v) {
                         Log.v(LOG_TAG, "Item Clicked.");
-                        removeAt(position, currentItem);
+                        Log.v(LOG_TAG,holder.eventLabel.getText().toString());
+                        removeAt(position, currentItem,holder);
                     }
                 });
             }
             // click event handler when Item in RecyclerView is clicked
 
         }
-        public void removeAt(final int position, final Item item) {
-            AlertDialog.Builder builder= new AlertDialog.Builder(item.context);
+        public void removeAt(final int position, final Item item,final AllItemViewHolder holder ) {
+            final Context context=item.context;
+            AlertDialog.Builder builder= new AlertDialog.Builder(context);
             builder.setMessage("Do you really want to delete this event?")
                     .setTitle("Confirmation")
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -390,7 +399,7 @@ public class EventRecyclerView {
                             items.remove(position);
                             notifyItemRemoved(position);
                             notifyItemRangeChanged(position, items.size());
-                            deleteFunction(item);
+                            deleteFunction(context,holder);
                         }
                     })
                     .setNegativeButton("NO",null)
@@ -399,8 +408,7 @@ public class EventRecyclerView {
 
         }
 
-        public void deleteFunction(Item item){
-            final Context context=item.context;
+        public void deleteFunction(final Context context,final AllItemViewHolder holder){
             Log.e(STRING_TAG,"insideListiner");
             Response.Listener<String> responseListener= new Response.Listener<String>() {
                 @Override
@@ -411,7 +419,7 @@ public class EventRecyclerView {
                         boolean success = jsonObject.getBoolean("success");
                         if(success){
                             Log.e(STRING_TAG,"insideSuccess");
-                            String toastMesg = "You have sucessfully deleted an event.";
+                            String toastMesg = "You have deleted your event from database";
                             Toast toast = Toast.makeText(context, toastMesg, Toast.LENGTH_SHORT);
                             TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                             if (v != null) v.setGravity(Gravity.CENTER);
@@ -429,7 +437,12 @@ public class EventRecyclerView {
                     }
                 }
             };
-            DeleteRequest deleteRequest=new DeleteRequest(item.eventOrganizer,item.eventLabel,item.eventDate,item.eventCategory,item.eventLocation, responseListener);
+            DeleteRequest deleteRequest=new DeleteRequest(holder.eventOrganizer.getText().toString()
+                    ,holder.eventLabel.getText().toString()
+                    ,holder.eventDate.getText().toString()
+                    ,holder.eventCategory.getText().toString()
+                    ,holder.eventLocation.getText().toString()
+                    ,responseListener);
             RequestQueue queue = Volley.newRequestQueue(context);
             queue.add(deleteRequest);
         }
