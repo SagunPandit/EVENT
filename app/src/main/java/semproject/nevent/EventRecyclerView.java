@@ -149,7 +149,7 @@ public class EventRecyclerView {
 
             return holder;
         }
-
+//dhchgc
         //binds all the views from view holder to form a single view and show the binded view
         @Override
         public void onBindViewHolder(final ItemViewHolder holder, final int position) {
