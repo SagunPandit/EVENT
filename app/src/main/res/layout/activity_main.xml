@@ -11,10 +11,10 @@
     tools:context="semproject.nevent.MainActivity">
 
 
-    <TextView
-        android:text="Loading..."
-        android:textSize="40sp"
 
+ <TextView
+        android:text="Loading"
+        android:textSize="40sp"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_alignParentTop="true"

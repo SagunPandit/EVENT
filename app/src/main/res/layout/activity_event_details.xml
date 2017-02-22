@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="semproject.nevent.EventDetails">
+<RelativeLayout
     android:id="@+id/activity_event_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="11dp"
-    android:paddingLeft="11dp"
-    android:paddingTop="11dp"
-    tools:context="semproject.nevent.EventDetails">
+    android:paddingTop="11dp">
     <LinearLayout
         android:id="@+id/dlinear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:id="@+id/detaildownloadedimage"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="11dp"
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/deventLabel"
@@ -42,7 +53,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="11dp">
             <TextView
                 android:id="@+id/deventLocation"
                 android:layout_width="0dp"
@@ -64,7 +76,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="11dp">
             <TextView
                 android:id="@+id/deventOrganizer"
                 android:layout_width="wrap_content"
@@ -95,3 +108,4 @@
         android:textColor="#008000"/>
 
 </RelativeLayout>
+</ScrollView>
