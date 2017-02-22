@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_upload"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="semproject.nevent.Upload">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_name"
+        android:ems="10"
+        android:hint="Event name"
+        android:layout_marginTop="11dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/location"
+        android:hint="Location"
+        android:ems="10"
+        android:layout_below="@id/event_name"
+        android:layout_marginTop="11dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/date"
+        android:hint="Date"
+        android:ems="10"
+        android:layout_below="@id/location"
+        android:layout_marginTop="11dp"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date"
+        android:id="@+id/spinner"
+        android:entries="@array/category_name"
+        android:layout_marginTop="11dp">
+    </Spinner>
+
+    <EditText
+        android:id="@+id/details"
+        android:layout_below="@id/spinner"
+        android:inputType="textCapSentences|textMultiLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Give details"
+        android:gravity="top"
+        android:lines="5"
+        android:layout_marginTop="11dp"/>
+
+
+    <Button
+        android:text="Upload"
+        android:background="@drawable/shape2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/details"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:id="@+id/button_register"
+        android:elevation="24dp"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:onClick="upload"
+        android:layout_margin="30dp"/>
+
+
+
+
+
+</RelativeLayout>
