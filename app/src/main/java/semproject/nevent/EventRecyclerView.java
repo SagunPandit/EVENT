@@ -327,7 +327,7 @@ public class EventRecyclerView {
             }
         }
 
-        //create a view holder of items
+        //create a view holder of itemsa
         @Override
         public AllItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Log.v(LOG_TAG, "onCreateViewHolder called.");
