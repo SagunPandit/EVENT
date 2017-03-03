@@ -125,7 +125,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     @Override //http://stackoverflow.com/questions/31231609/creating-a-button-in-android-toolbar
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.homepage, menu);
+        getMenuInflater().inflate(R.menu.homepage, menu); //R.menu.homepage -> this menu is a xml tag
         return true;
     }
 

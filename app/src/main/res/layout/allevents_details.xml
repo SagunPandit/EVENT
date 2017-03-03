@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             card_view:cardCornerRadius="10dp"
             card_view:cardElevation="10dp"
-            card_view:cardBackgroundColor="#ffffff"
+            card_view:cardBackgroundColor="#ccffffff"
             app:cardUseCompatPadding="false"
             android:layout_margin="10dp">
             <RelativeLayout
