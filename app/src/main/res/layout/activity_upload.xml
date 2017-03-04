@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="semproject.nevent.Upload">
+
+<RelativeLayout
     android:id="@+id/activity_upload"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +14,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="semproject.nevent.Upload">
+    android:orientation="vertical">
 
     <EditText
         android:layout_width="wrap_content"
@@ -55,13 +61,28 @@
         android:lines="5"
         android:layout_marginTop="11dp"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Browse photo"
+        android:background="@android:color/holo_orange_dark"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="13dp"
+        android:id="@+id/image"
+        android:layout_below="@id/details" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:id="@+id/imagetoupload"
+        android:layout_below="@+id/image"/>
+
 
     <Button
         android:text="Upload"
         android:background="@drawable/shape2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/details"
+        android:layout_below="@id/imagetoupload"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:id="@+id/button_register"
@@ -70,8 +91,5 @@
         android:onClick="upload"
         android:layout_margin="30dp"/>
 
-
-
-
-
 </RelativeLayout>
+</ScrollView>

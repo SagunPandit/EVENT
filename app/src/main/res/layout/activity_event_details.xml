@@ -1,97 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_event_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="11dp"
-    android:paddingLeft="11dp"
-    android:paddingTop="11dp"
+    android:orientation="vertical"
+    android:background="@drawable/wall2"
     tools:context="semproject.nevent.EventDetails">
+<RelativeLayout
+    android:id="@+id/activity_event_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
     <LinearLayout
         android:id="@+id/dlinear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <LinearLayout
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/deventLabel"
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="wrap_content"
-                android:text="EVENTS 1"
-                android:textSize="30sp"
-                android:textColor="#008000"/>
-            <TextView
-                android:id="@+id/deventCategory"
-                android:layout_width="wrap_content"
-                android:layout_weight=".5"
-                android:layout_height="wrap_content"
-                android:text="category"
-                android:textSize="25sp"
-                android:textAlignment="center"
-                android:textColor="#008000"/>
+            card_view:cardCornerRadius="0dp"
+            card_view:cardElevation="10dp"
+            card_view:cardBackgroundColor="#ffffff"
+            app:cardUseCompatPadding="false">
 
-
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:layout_centerInParent="true"
+            android:id="@+id/detaildownloadedimage" />
+        </android.support.v7.widget.CardView>
         </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/dlinear2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/dlinear1">
+        <!--Card view bhitra layout arrange garna jaile relative layout halnai parcha-->
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="8dp"
+            card_view:cardElevation="10dp"
+            card_view:cardBackgroundColor="#000000"
+            app:cardUseCompatPadding="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/inside1"
             android:orientation="horizontal">
-            <TextView
-                android:id="@+id/deventLocation"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                android:text="LOCATION"
-                android:textSize="20sp"
-                android:textColor="#008000"/>
 
             <TextView
-                android:id="@+id/deventDate"
+                android:background="@drawable/shape3"
+                android:id="@+id/deventLabel"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:text="EVENTS 1"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/deventCategory"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="category"
+                android:textSize="10sp"
+                android:background="@drawable/shape3"
+                android:gravity="center"
+
+                android:textColor="#ffffff"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            android:id="@+id/inside2"
+            android:layout_below="@id/inside1"
+          >
+
+            <TextView
+                android:id="@+id/deventLocation"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape3"
+                android:layout_height="match_parent"
+                android:text="LOCATION"
+                android:textSize="20sp"
+                android:textColor="#ffffff"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/deventDate"
+                android:background="@drawable/shape3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:text="2016/2/23"
                 android:textSize="20sp"
-                android:textColor="#008000"/>
+                android:textColor="#ffffff"
+                android:gravity="center"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:background="@drawable/shape3"
+            android:layout_height="50dp"
+            android:id="@+id/inside3"
+            android:layout_below="@id/inside2"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/deventOrganizer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:text="organizer"
                 android:textSize="15sp"
-                android:textColor="#008000"/>
+                android:textColor="#ffffff"
+                android:gravity="center"/>
+
             <TextView
                 android:id="@+id/deventId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="id"
                 android:textSize="15sp"
-                android:textColor="#008000"
+                android:textColor="#000000"
                 android:visibility="invisible"/>
         </LinearLayout>
+        </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+
 
     </LinearLayout>
-    <TextView
-        android:id="@+id/deventDetails"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/dlinear1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:lines="5"
-        android:textSize="15dp"
-        android:text=""
-        android:textColor="#008000"/>
+
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_below="@id/dlinear2"
+       android:layout_marginTop="10dp">
+       <android.support.v7.widget.CardView
+           xmlns:card_view="http://schemas.android.com/apk/res-auto"
+           android:id="@+id/card_view2"
+           android:layout_gravity="center"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           card_view:cardCornerRadius="0dp"
+           card_view:cardElevation="10dp"
+           card_view:cardBackgroundColor="#ff9900"
+           app:cardUseCompatPadding="true">
+
+           <TextView
+               android:id="@+id/deventDetails"
+               android:padding="11dp"
+               android:layout_marginTop="10dp"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:lines="5"
+               android:textSize="15dp"
+               android:text=""
+               android:textColor="#000000"/>
+       </android.support.v7.widget.CardView>
+
+   </LinearLayout>
+
+
+
 
 </RelativeLayout>
+</ScrollView>

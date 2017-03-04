@@ -3,6 +3,9 @@ package semproject.nevent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -23,6 +28,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +42,9 @@ import static semproject.nevent.MainActivity.PreferenceFile;
 
 public class Userdetail extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener {
     String STRING_TAG="Userdetail";
+    private static final String SERVER_ADDRESS="http://avashadhikari.com.np/";
+    ImageView downloadedimage;
+    TextView user_name;
     SharedPreferences sharedpreferences;
     private RecyclerView mRecyclerView;
     String username;
@@ -52,8 +63,13 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         username = getArguments().getString("username");
-        View rootView = inflater.inflate(R.layout.fragment_userdetails, container, false);
 
+        View rootView = inflater.inflate(R.layout.fragment_userdetails, container, false);
+        user_name=(TextView) rootView.findViewById(R.id.user_name);
+        user_name.setText(username);
+
+        downloadedimage=(ImageView) rootView.findViewById(R.id.profileimage);
+        new Downloadimage(username).execute();
         // BEGIN_INCLUDE(initializeRecyclerView)
         RecyclerView.LayoutManager mLayoutManager;
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.user_recycler_view);
@@ -100,6 +116,8 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
         });
         return rootView;
     }
+
+
 
     public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
         Log.e(STRING_TAG,"database");
@@ -184,6 +202,42 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
             queue.add(recyclerRequest);
         }
     }
+
+    //For retrieving the image of user.
+    private class Downloadimage extends AsyncTask<Void, Void, Bitmap>
+    {
+        String name;
+        public Downloadimage(String name)
+        {
+            this.name=name;
+        }
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            String url=SERVER_ADDRESS+"pictures/userimages/"+name+".JPG";
+            try{
+                URLConnection connection=new URL(url).openConnection();
+                connection.setConnectTimeout(1000*30);
+                connection.setReadTimeout(1000*30);
+                return BitmapFactory.decodeStream((InputStream) connection.getContent(),null,null);
+
+            }catch(Exception e){
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            if(bitmap!=null)
+            {
+                downloadedimage.setImageBitmap(bitmap);
+            }
+        }
+    }
+
+
 
     private boolean checkConnection(Context context) {
         Log.e(STRING_TAG,"checkConnection");
