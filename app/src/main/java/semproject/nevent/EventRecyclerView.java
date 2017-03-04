@@ -45,6 +45,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class EventRecyclerView {
 
     public void initializeData(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String organizer,Integer viewcount,Context context) {
         items.add(new Item(eventid,eventname, eventcategory,eventlocation,eventdate,organizer,viewcount,context));
+        Log.e(STRING_TAG,eventname+" data initialized");
 
     }
 
@@ -71,8 +73,9 @@ public class EventRecyclerView {
         return items;
     }
 
-    private class Item {
-        private String eventId,eventLabel,eventLocation,eventDate,eventOrganizer,eventCategory;
+    public class Item {
+        public String eventLabel;
+        private String eventId,eventLocation,eventDate,eventOrganizer,eventCategory;
         private Context context;
         private int viewcount;
 
@@ -439,13 +442,19 @@ public class EventRecyclerView {
         List<Item> items = Collections.emptyList();
         Item currentItem;
         String username;
+        private int check=10;
 
-
+        public AllItemAdapter(){
+           /* Log.e(STRING_TAG,Integer.toString(check));
+            check++;*/
+        }
         // Constructor to inflate layout of each item in RecyclerView
         public AllItemAdapter(Context context, List<Item> items, String name) {
             inflater = LayoutInflater.from(context);
             this.items = items;
             username=name;
+           /* Log.e(STRING_TAG,"itemadpter "+Integer.toString(check));*/
+
         }
 
         private boolean checkConnection() {
@@ -661,6 +670,16 @@ public class EventRecyclerView {
                 downloadedimage=(ImageView) itemView.findViewById(R.id.alldownloadedimage);
 
             }
+        }
+
+        public void setFilter(List<Item> searchitem){
+            if(items.isEmpty())
+                Log.e(STRING_TAG,"SetFilter empty");
+            //Log.e(STRING_TAG,"SetFilter "+Integer.toString(check));
+            items=Collections.emptyList();
+            items=searchitem;
+
+            notifyDataSetChanged();
         }
 
         //For retrieving the image of event.

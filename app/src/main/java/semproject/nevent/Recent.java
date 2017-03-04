@@ -23,6 +23,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static semproject.nevent.HomePage.staticadapter;
+import static semproject.nevent.HomePage.staticeventRecyclerView;
+
 /**
  * Created by User on 1/23/2017.
  */
@@ -38,10 +41,10 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
     List<String>eventCategory=new ArrayList<>();
     List<String>eventOrganizer=new ArrayList<>();
     List<Integer>viewcount=new ArrayList<>();
-    EventRecyclerView eventRecyclerView = new EventRecyclerView();
 
     public Recent() {
-        // Required empty public constructor
+        staticeventRecyclerView=new EventRecyclerView();
+        staticadapter=new EventRecyclerView.AllItemAdapter();
     }
 
 
@@ -67,15 +70,15 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
         listenerFunction(username);
         return rootView;
     }
-    public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
+    public void retreiveFromDatabase(RecyclerView mRecyclerView,Context context){
         Log.e(STRING_TAG,"database");
         if(checkConnection(getContext())){
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem(),username);
-                mRecyclerView.setAdapter(mAdapter);
+                staticeventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
+                staticadapter = new EventRecyclerView.AllItemAdapter(context, staticeventRecyclerView.getItem(),username);
+                mRecyclerView.setAdapter(staticadapter);
             }
         }
 
@@ -131,7 +134,7 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                                 viewcount.add((Integer) jsonArray7.get(i));
                             }
 
-                            retreiveFromDatabase(eventRecyclerView, mRecyclerView, getContext());
+                            retreiveFromDatabase(mRecyclerView, getContext());
                         }
                         else
                             Log.e(STRING_TAG,"insideNull");

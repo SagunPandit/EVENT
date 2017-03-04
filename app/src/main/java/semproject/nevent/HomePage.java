@@ -42,14 +42,17 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,ConnectivityReceiver.ConnectivityReceiverListener {
+public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,ConnectivityReceiver.ConnectivityReceiverListener,SearchView.OnQueryTextListener {
     final String STRING_TAG= "HomePage";
     NavigationView navigationView=null;
     Toolbar toolbar=null;
     String username;
     Context context;
+    static EventRecyclerView staticeventRecyclerView = new EventRecyclerView();
+    static EventRecyclerView.AllItemAdapter staticadapter=new EventRecyclerView.AllItemAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +128,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     @Override //http://stackoverflow.com/questions/31231609/creating-a-button-in-android-toolbar
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.homepage, menu); //R.menu.homepage -> this menu is a xml tag
+        getMenuInflater().inflate(R.menu.homepage, menu);
+        MenuItem menuItem=menu.findItem(R.id.action_search);
+        SearchView searchView= (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -307,5 +313,30 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             startActivity(intent);
 
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String searchEvent) {
+        List<EventRecyclerView.Item> extractedItem=staticeventRecyclerView.getItem();
+        final List<EventRecyclerView.Item> searchItem=new ArrayList<>();
+        if(extractedItem.isEmpty())
+            Log.e(STRING_TAG,"empty");
+        else
+            Log.e(STRING_TAG,"is not empty");
+        for(EventRecyclerView.Item indevent: extractedItem){
+            String eventname=indevent.eventLabel;
+            Log.i(STRING_TAG+"Searching",searchEvent);
+            if(eventname.contains(searchEvent)){
+                searchItem.add(indevent);
+                Log.i(STRING_TAG+"SearchProgress",searchEvent);
+            }
+        }
+        staticadapter.setFilter(searchItem);
+        return true;
     }
 }

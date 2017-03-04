@@ -24,13 +24,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static semproject.nevent.HomePage.staticadapter;
+import static semproject.nevent.HomePage.staticeventRecyclerView;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Parties extends Fragment implements ConnectivityReceiver.ConnectivityReceiverListener{
     private RecyclerView mRecyclerView;
-    String STRING_TAG="Parties";
+    String STRING_TAG="PARTIES";
     String username;
     List<String> eventId=new ArrayList<>();
     List<String>eventList=new ArrayList<>();
@@ -39,11 +42,10 @@ public class Parties extends Fragment implements ConnectivityReceiver.Connectivi
     List<String>eventCategory=new ArrayList<>();
     List<String>eventOrganizer=new ArrayList<>();
     List<Integer>viewcount=new ArrayList<>();
-    EventRecyclerView eventRecyclerView = new EventRecyclerView();
-
 
     public Parties() {
-        // Required empty public constructor
+        staticeventRecyclerView=new EventRecyclerView();
+        staticadapter=new EventRecyclerView.AllItemAdapter();
     }
 
 
@@ -51,11 +53,11 @@ public class Parties extends Fragment implements ConnectivityReceiver.Connectivi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         username = getArguments().getString("username");
-        View rootView = inflater.inflate(R.layout.fragment_parties, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
 
         // BEGIN_INCLUDE(initializeRecyclerView)
         RecyclerView.LayoutManager mLayoutManager;
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.parties_recycler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_recycler_view);
         if (mRecyclerView != null) {
             mRecyclerView.setHasFixedSize(true);
         }
@@ -66,25 +68,24 @@ public class Parties extends Fragment implements ConnectivityReceiver.Connectivi
         // elements are laid out.
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        conferenceListener(username);
-        // Inflate the layout for this fragment
+        listenerFunction(username);
         return rootView;
     }
-
-    public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
+    public void retreiveFromDatabase(RecyclerView mRecyclerView,Context context){
         Log.e(STRING_TAG,"database");
         if(checkConnection(getContext())){
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(context, eventRecyclerView.getItem(),username);
-                mRecyclerView.setAdapter(mAdapter);
+                staticeventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
+                staticadapter = new EventRecyclerView.AllItemAdapter(context, staticeventRecyclerView.getItem(),username);
+                mRecyclerView.setAdapter(staticadapter);
             }
         }
 
     }
-    public void conferenceListener(final String username){
+
+    public void listenerFunction(String username){
         Log.e(STRING_TAG,"insideListiner");
         Response.Listener<String> responseListener= new Response.Listener<String>() {
             @Override
@@ -134,7 +135,7 @@ public class Parties extends Fragment implements ConnectivityReceiver.Connectivi
                                 viewcount.add((Integer) jsonArray7.get(i));
                             }
 
-                            retreiveFromDatabase(eventRecyclerView, mRecyclerView, getContext());
+                            retreiveFromDatabase(mRecyclerView, getContext());
                         }
                         else
                             Log.e(STRING_TAG,"insideNull");
@@ -157,7 +158,6 @@ public class Parties extends Fragment implements ConnectivityReceiver.Connectivi
             RequestQueue queue = Volley.newRequestQueue(getContext());
             queue.add(recyclerRequest);
         }
-
     }
 
     private boolean checkConnection(Context context) {
