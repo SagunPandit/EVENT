@@ -1,5 +1,7 @@
 package semproject.nevent;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,15 +10,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.design.internal.ParcelableSparseArray;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,7 +50,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static semproject.nevent.MainActivity.PreferenceFile;
 
@@ -62,8 +73,10 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
     private static final String SERVER_ADDRESS="http://avashadhikari.com.np/";
     LatLng latlang = null;
     TextView image;
-    EditText event_name, location, date, details;
+    EditText event_name, location, details;
     ImageView imagetoupload;
+    public static String eventdate="";
+    DatePickerFragment datePickerFragment;
 
 
     @Override
@@ -76,13 +89,12 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
 
         event_name = (EditText) findViewById(R.id.event_name);
         location = (EditText) findViewById(R.id.location);
-        date = (EditText) findViewById(R.id.date);
         details=(EditText) findViewById(R.id.details);
 
         //Storing the data in shared preferences to these variables.
         event_name.setText(sharedpreferences.getString("event_name",""));
         location.setText(sharedpreferences.getString("location",""));
-        date.setText(sharedpreferences.getString("date",""));
+/*        date.setText(sharedpreferences.getString("date",""));*/
         details.setText(sharedpreferences.getString("details",""));
 
         image=(TextView) findViewById(R.id.image);
@@ -118,7 +130,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
         editor.putString("username",username);
         editor.putString("event_name", event_name.getText().toString());
         editor.putString("location", location.getText().toString());
-        editor.putString("date",date.getText().toString());
+        editor.putString("date",eventdate);
         editor.putString("details",details.getText().toString());
         editor.apply();
 
@@ -143,93 +155,114 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
         }
     }
 
-    public void upload(View view)
-    {
+    public void setEventDate(View view){
+        datePickerFragment=new DatePickerFragment();
+        datePickerFragment.show(getSupportFragmentManager(),"EventDate");
+    }
 
-        Spinner spinner = (Spinner)findViewById(R.id.spinner);
+    public void upload(View view) {
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
         assert spinner != null;
         category_name = spinner.getSelectedItem().toString();
 
         String toastMesg;
         Toast toast;
         TextView v;
-        Log.e(STRING_TAG,username);
+        Log.e(STRING_TAG, username);
 
-        if(event_name.getText().toString().isEmpty() || location.getText().toString().isEmpty() || date.getText().toString().isEmpty() || details.getText().toString().isEmpty() || latitude==0.00 || longitude==0.00)
-        {
+        if (event_name.getText().toString().isEmpty() || location.getText().toString().isEmpty() || details.getText().toString().isEmpty()) {
             toastMesg = "All fields must be filled.";
             toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
             v = (TextView) toast.getView().findViewById(android.R.id.message);
             if (v != null) v.setGravity(Gravity.CENTER);
             toast.show();
-        }
-        else
-        {
-            final String fevent_name = event_name.getText().toString();
-            final String flocation = location.getText().toString();
-            final String fdate = date.getText().toString();
-            final String fdetails= details.getText().toString();
-            final Bitmap imageupload=((BitmapDrawable)imagetoupload.getDrawable()).getBitmap();
+        } else if (eventdate.isEmpty()) {
+            toastMesg = "Pick a event date first";
+            toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+            v = (TextView) toast.getView().findViewById(android.R.id.message);
+            if (v != null) v.setGravity(Gravity.CENTER);
+            toast.show();
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date strDate = null;
+            try {
+                strDate = sdf.parse(eventdate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (new Date().after(strDate)) {
+                Log.i("On_Date", "outofdate");
+                toastMesg = "Date picked for event is outdated.";
+                toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+                v = (TextView) toast.getView().findViewById(android.R.id.message);
+                if (v != null) v.setGravity(Gravity.CENTER);
+                toast.show();
+            } else {
+                Log.i("On_Date", "DateIsValid");
+                final String fevent_name = event_name.getText().toString();
+                final String flocation = location.getText().toString();
+                final String fdate = eventdate;
+                final String fdetails = details.getText().toString();
+                final Bitmap imageupload = ((BitmapDrawable) imagetoupload.getDrawable()).getBitmap();
 
-            Response.Listener<String> responseListener = new Response.Listener<String>()
-            {
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
 
-                @Override
-                public void onResponse(String response)
-                {
-                    String toastMesg;
-                    Toast toast;
-                    TextView v;
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        int success = jsonResponse.getInt("success");
-                        Log.e(STRING_TAG,Integer.toString(success));
-                        switch (success) {
-                            case 0:
-                                toastMesg = "Event Name already exists.";
-                                toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
-                                v = (TextView) toast.getView().findViewById(android.R.id.message);
-                                if (v != null) v.setGravity(Gravity.CENTER);
-                                toast.show();
-                                break;
-                            case 1:
-                                Log.e("Event name", fevent_name);
-                                new UploadImage(imageupload,fevent_name).execute();
-                                toastMesg = "Congratulations!! You have successfully created an event.";
-                                toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_LONG);
-                                v = (TextView) toast.getView().findViewById(android.R.id.message);
-                                if (v != null) v.setGravity(Gravity.CENTER);
-                                toast.show();
-                                Intent intent = new Intent(Upload.this, HomePage.class);
-                                intent.putExtra("username",username);
-                                sharedpreferences = getSharedPreferences(PreferenceFiles, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedpreferences.edit();
-                                editor.clear();
-                                editor.apply();
-                                Log.e("Stringdoublelatitude",Double.toString(latitude));
-                                Log.e("Stringdoublelongitude",Double.toString(longitude));
-                                Log.d("NORMALlatitude","value"+latitude);
-                                Log.d("NORMALlongitude","value"+longitude);
-                                startActivity(intent);
-                                finish();
+                    @Override
+                    public void onResponse(String response) {
+                        String toastMesg;
+                        Toast toast;
+                        TextView v;
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            int success = jsonResponse.getInt("success");
+                            Log.e(STRING_TAG, Integer.toString(success));
+                            switch (success) {
+                                case 0:
+                                    toastMesg = "Event Name already exists.";
+                                    toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+                                    v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                    if (v != null) v.setGravity(Gravity.CENTER);
+                                    toast.show();
+                                    break;
+                                case 1:
+                                    Log.e("Event name", fevent_name);
+                                    new UploadImage(imageupload, fevent_name).execute();
+                                    toastMesg = "Congratulations!! You have successfully created an event.";
+                                    toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_LONG);
+                                    v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                    if (v != null) v.setGravity(Gravity.CENTER);
+                                    toast.show();
+                                    Intent intent = new Intent(Upload.this, HomePage.class);
+                                    intent.putExtra("username", username);
+                                    sharedpreferences = getSharedPreferences(PreferenceFiles, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.clear();
+                                    editor.apply();
+                                    Log.e("Stringdoublelatitude", Double.toString(latitude));
+                                    Log.e("Stringdoublelongitude", Double.toString(longitude));
+                                    Log.d("NORMALlatitude", "value" + latitude);
+                                    Log.d("NORMALlongitude", "value" + longitude);
+                                    startActivity(intent);
+                                    finish();
 
-                                break;
+                                    break;
 
-                            default:
-                                break;
-                        }
-
-                        }catch (JSONException e)
-                            {
-                                e.printStackTrace();
+                                default:
+                                    break;
                             }
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                };
+                if (checkConnection(this)) {
+                    UploadRequest uploadRequest = new UploadRequest(fevent_name, flocation, fdate, category_name, username, fdetails, latitude, longitude, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(this);
+                    queue.add(uploadRequest);//automatically start the string request on the queue
                 }
-            };
-            if(checkConnection(this)) {
-                UploadRequest uploadRequest = new UploadRequest(fevent_name, flocation, fdate, category_name, username, fdetails, latitude, longitude, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(this);
-                queue.add(uploadRequest);//automatically start the string request on the queue
             }
         }
     }
@@ -333,6 +366,41 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
         HttpConnectionParams.setConnectionTimeout(httpRequestParams,1000*30);
         HttpConnectionParams.setSoTimeout(httpRequestParams,1000*30);
         return httpRequestParams;
+    }
+
+    //For selecting eventdate
+    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+        String logMessage;
+        int[] date={0,0,0};
+        public DatePickerFragment(){}
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(),this, year, month, day);
+        }
+
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            date[0]=day;
+            date[1]=month;
+            date[2]=year;
+            // Do something with the date chosen by the user
+            eventdate=String.valueOf(day)+"/"+String.valueOf(month+1)+"/"+String.valueOf(year);
+            Log.i("On_Date_Set", eventdate);
+            String currentDate= DateFormat.getDateFormat(getContext()).format(new Date());
+            Log.i("Current", currentDate);
+        }
+    /*
+        public int[] giveDate(){
+            //Log.isLoggable("GIVE_DATE",date[2]);
+            return date;
+        }*/
     }
 
 }
