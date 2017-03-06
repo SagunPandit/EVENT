@@ -2,11 +2,13 @@ package semproject.nevent;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.design.internal.ParcelableSparseArray;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -26,6 +29,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -42,57 +46,84 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+import static semproject.nevent.MainActivity.PreferenceFile;
+
 
 public class Upload extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener, View.OnClickListener {
 
     final String STRING_TAG = "Upload";
     String username,category_name;
-    /*Spinner spinner;*/
     private static final int RESULT_LOAD_IMAGE=1;
+    public static String PreferenceFiles = "uploadsharedpreference";
+    SharedPreferences sharedpreferences;
     private static final int MAX_WIDTH=1024;
     String encodedImage;
+    double longitude, latitude;
     private static final String SERVER_ADDRESS="http://avashadhikari.com.np/";
+    LatLng latlang = null;
     TextView image;
     EditText event_name, location, date, details;
     ImageView imagetoupload;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
 
-        image=(TextView) findViewById(R.id.image);
-        imagetoupload=(ImageView) findViewById(R.id.imagetoupload);
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username");
-        Log.e(STRING_TAG,username);
+        sharedpreferences = getSharedPreferences(PreferenceFiles, Context.MODE_PRIVATE);
 
 
-
-       /** spinner=(Spinner) findViewById(R.id.spinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                Object category=parent.getItemAtPosition(position);
-
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-
-            }
-        });**/
         event_name = (EditText) findViewById(R.id.event_name);
         location = (EditText) findViewById(R.id.location);
         date = (EditText) findViewById(R.id.date);
         details=(EditText) findViewById(R.id.details);
-        image.setOnClickListener(this);
+
+        //Storing the data in shared preferences to these variables.
+        event_name.setText(sharedpreferences.getString("event_name",""));
+        location.setText(sharedpreferences.getString("location",""));
+        date.setText(sharedpreferences.getString("date",""));
+        details.setText(sharedpreferences.getString("details",""));
+
+        image=(TextView) findViewById(R.id.image);
+        imagetoupload=(ImageView) findViewById(R.id.imagetoupload);
+
+        Intent intent = getIntent();
+        if(intent.getStringExtra("username")!=null)
+        {
+            username = intent.getStringExtra("username");
+            Log.e(STRING_TAG,username);
+        }
+        else
+        {
+            username=sharedpreferences.getString("username","");
+        }
+
+         longitude=intent.getDoubleExtra("longitude",0.00);
+         latitude=intent.getDoubleExtra("latitude",0.00);
+
+         image.setOnClickListener(this);
+
+
+
+
+
+    }
+
+    public void locationbutton(View view)
+    {
+        //using sharedpreference to store event details.
+        sharedpreferences = getSharedPreferences(PreferenceFiles, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("username",username);
+        editor.putString("event_name", event_name.getText().toString());
+        editor.putString("location", location.getText().toString());
+        editor.putString("date",date.getText().toString());
+        editor.putString("details",details.getText().toString());
+        editor.apply();
+
+        Intent intent= new Intent(this,NMapsActivity.class);
+        startActivity(intent);
 
     }
 
@@ -124,7 +155,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
         TextView v;
         Log.e(STRING_TAG,username);
 
-        if(event_name.getText().toString().isEmpty() || location.getText().toString().isEmpty() || date.getText().toString().isEmpty() || details.getText().toString().isEmpty())
+        if(event_name.getText().toString().isEmpty() || location.getText().toString().isEmpty() || date.getText().toString().isEmpty() || details.getText().toString().isEmpty() || latitude==0.00 || longitude==0.00)
         {
             toastMesg = "All fields must be filled.";
             toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
@@ -171,6 +202,14 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
                                 toast.show();
                                 Intent intent = new Intent(Upload.this, HomePage.class);
                                 intent.putExtra("username",username);
+                                sharedpreferences = getSharedPreferences(PreferenceFiles, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.clear();
+                                editor.apply();
+                                Log.e("Stringdoublelatitude",Double.toString(latitude));
+                                Log.e("Stringdoublelongitude",Double.toString(longitude));
+                                Log.d("NORMALlatitude","value"+latitude);
+                                Log.d("NORMALlongitude","value"+longitude);
                                 startActivity(intent);
                                 finish();
 
@@ -188,7 +227,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
                 }
             };
             if(checkConnection(this)) {
-                UploadRequest uploadRequest = new UploadRequest(fevent_name, flocation, fdate, category_name, username, fdetails, responseListener);
+                UploadRequest uploadRequest = new UploadRequest(fevent_name, flocation, fdate, category_name, username, fdetails, latitude, longitude, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(this);
                 queue.add(uploadRequest);//automatically start the string request on the queue
             }

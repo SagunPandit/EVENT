@@ -2,8 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="semproject.nevent">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -32,19 +40,51 @@
             android:name=".HomePage"
             android:label="nEVENT"
             android:screenOrientation="portrait">
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".SignIn"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Upload"
             android:screenOrientation="portrait" />
         <activity android:name=".InternetConnection" />
-        <activity android:name=".EventDetails"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".EventDetails"
+            android:screenOrientation="portrait" />
+
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".NMapsActivity"
+            android:parentActivityName=".Upload"
+            android:screenOrientation="portrait"></activity>
+        <!--
+     ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".ShowEvents"
+            android:label="@string/title_activity_show_events"></activity>
+        <activity
+            android:name=".ShowLocation"
+            ></activity>
     </application>
 
 </manifest>
