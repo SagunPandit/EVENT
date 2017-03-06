@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,7 +31,7 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
     private static final String SERVER_ADDRESS="http://avashadhikari.com.np/";
     ImageView downloadedimage;
     TextView veventLabel,veventLocation,veventDate,veventOrganizer,veventCategory,veventId,veventDetails;
-    String eventId, eventLabel, eventLocation, eventDate, eventOrganizer, eventCategory,eventDetails;
+    String eventId, eventLabel, eventLocation, eventDate, eventOrganizer, eventCategory,eventDetails,eventLatitude, eventLongitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +69,15 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
     }
     //String eventId,String eventLabel,String eventLocation,String eventDate,String eventOrganizer,String eventCategory
 
+    public void showlocation(View view)
+    {
+        Intent i= new Intent(this,ShowLocation.class);
+        i.putExtra("eventname",eventLabel);
+        i.putExtra("latitude",eventLatitude);
+        i.putExtra("longitude",eventLongitude);
+        startActivity(i);
+
+    }
 
 
     public void listenerFunction(String eventId){
@@ -82,6 +92,8 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
                     if(success){
                         Log.e(STRING_TAG,"insideSuccess");
                         eventDetails = jsonObject.getString("event_details");
+                        eventLatitude=jsonObject.getString("event_lat");
+                        eventLongitude=jsonObject.getString("event_long");
                         veventDetails.setText(eventDetails);
                     }
                     else {
