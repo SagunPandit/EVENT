@@ -135,9 +135,19 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_location:
+                Intent intent=new Intent(this, ShowEvents.class);
+                intent.putExtra("username",username);
+                startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -229,8 +239,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             fragmentTransaction.replace(R.id.fragment_container, gaming);
             gaming.setArguments(bundle);
             fragmentTransaction.commit();
-
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

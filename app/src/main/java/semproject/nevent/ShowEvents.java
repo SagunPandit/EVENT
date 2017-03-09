@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +17,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,6 +27,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import static semproject.nevent.Recent.latitude;
+import static semproject.nevent.Recent.longitude;
 
 public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -41,6 +47,7 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        /*ShowNearbyEvents();*/
     }
 
 
@@ -87,8 +94,8 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
             client.connect();
             locateMyLocation();
 
-        }
 
+        }
         //lets imagine a function which shows all events
 
 
@@ -103,15 +110,64 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
         //end of infowindow clicklistener
     }
 
-    //TO BE ADDED
-    //FUNCTION TO SHOW ALL EVENT
+    public void ShowNearbyEvents()
 
-    public void ShowAllEvents(double latitiude, double longitude, String EventName) {
+    {
+        mMap.moveCamera(CameraUpdateFactory
+                .newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getAltitude()), 14.0f));            ;
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f), 2000, null);
+        LatLng pos= new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        Log.e("current",mCurrentLocation.toString());
+        Log.d("current long","value"+mCurrentLocation.getLatitude());
 
-        LatLng Mark = new LatLng(latitiude, longitude);
-        mMap.addMarker(new MarkerOptions().position(Mark).title(EventName));
+
+        int i=0;
+        Double longs;
+        Double[] la= null;
+        Double[] ln= null;
+        float[] distance=null;
+
+
+
+        Circle circle = mMap.addCircle(new CircleOptions()
+                .center(pos)
+                .radius(5000)
+                .strokeColor(Color.rgb(0, 136, 255))
+                .fillColor(Color.argb(20, 0, 136, 255)));
+
+        for (double lat:latitude) {
+            Log.e("Location lat"+"number "+Integer.toString(i),Double.toString(lat));
+            longs = longitude.get(i);
+            Log.e("Location long",Double.toString(lat));
+            i++;
+            LatLng latlang = new LatLng(lat, longs);
+            Marker marker = mMap.addMarker(
+                    new MarkerOptions()
+                            .position(latlang)
+                            .visible(false));
+            float results[] = new float[1];
+
+            Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(),
+                    latlang.latitude, latlang.longitude,
+                    results);
+            if (results[0] < 50000) {
+                marker.setVisible(true);
+                if (la != null) {
+                    la[i]=lat;
+                }
+                if (ln != null) {
+                    ln[i]=longs;
+                }
+                if (distance != null) {
+                    distance[i]=results[0];
+                }
+
+            }
+        }
+
 
     }
+
 
 /*    public void ShowNearbyEvents()
     {
@@ -199,8 +255,8 @@ private void drawMap(LatLng latLng, List<LatLng> positions) {
 
 
                     mMap.moveCamera(CameraUpdateFactory
-                            .newLatLngZoom(new LatLng(27.7172, 85.3240), 7.0f));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(9.0f), 2000, null);
+                            .newLatLngZoom(new LatLng(27.7172, 85.3240), 14.0f));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f), 2000, null);
 
                 }
 
@@ -250,13 +306,15 @@ private void drawMap(LatLng latLng, List<LatLng> positions) {
         if (mLastLocation != null) {
             Log.d("Location",mLastLocation.toString());
 
-        } else {
-                 }
+        }
 
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
         }
+        ShowNearbyEvents();
+
     }
+
 
     @Override
     public void onConnectionSuspended(int i) {
