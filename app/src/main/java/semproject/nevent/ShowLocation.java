@@ -98,7 +98,7 @@ public class ShowLocation extends FragmentActivity implements OnMapReadyCallback
                     .build();
             client.connect();
             locateMyLocation();
-            ShowEvent(latitude,longitude,eventname);
+
 
         }
 
@@ -110,7 +110,7 @@ public class ShowLocation extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onInfoWindowClick(Marker marker) {
                 //TODO:add your desiredcode here and removve thetoast.
-                Toast.makeText(ShowLocation.this, marker.getTitle(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ShowLocation.this, eventname, Toast.LENGTH_SHORT).show();
             }
         });
         //end of infowindow clicklistener
@@ -123,6 +123,8 @@ public class ShowLocation extends FragmentActivity implements OnMapReadyCallback
 
         LatLng Mark = new LatLng(latitiude, longitude);
         mMap.addMarker(new MarkerOptions().position(Mark).title(EventName));
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Mark, (float) 14.0));
 
     }
 
@@ -163,6 +165,7 @@ public class ShowLocation extends FragmentActivity implements OnMapReadyCallback
 
 
         });
+        ShowEvent(latitude,longitude,eventname);
     }
 
     //??
@@ -250,7 +253,7 @@ public class ShowLocation extends FragmentActivity implements OnMapReadyCallback
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 client, mLocationRequest, this);
-        Toast.makeText(this, "Request", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, eventname, Toast.LENGTH_SHORT).show();
     }
 }
 

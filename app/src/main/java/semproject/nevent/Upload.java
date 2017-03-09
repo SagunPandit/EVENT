@@ -183,7 +183,23 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
             v = (TextView) toast.getView().findViewById(android.R.id.message);
             if (v != null) v.setGravity(Gravity.CENTER);
             toast.show();
-        } else {
+        } else if (latitude ==0.00 && longitude==0.00)
+        {
+            toastMesg = "Select a location from map";
+            toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+            v = (TextView) toast.getView().findViewById(android.R.id.message);
+            if (v != null) v.setGravity(Gravity.CENTER);
+            toast.show();
+        } else if (imagetoupload.getDrawable()==null)
+        {
+            toastMesg = "Select a photo for your event.";
+            toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+            v = (TextView) toast.getView().findViewById(android.R.id.message);
+            if (v != null) v.setGravity(Gravity.CENTER);
+            toast.show();
+        }
+
+         else {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date strDate = null;
             try {

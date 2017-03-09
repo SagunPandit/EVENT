@@ -9,10 +9,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,8 +33,9 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
     String STRING_TAG="EventDetails";
     private static final String SERVER_ADDRESS="http://avashadhikari.com.np/";
     ImageView downloadedimage;
-    TextView veventLabel,veventLocation,veventDate,veventOrganizer,veventCategory,veventId,veventDetails;
-    String eventId, eventLabel, eventLocation, eventDate, eventOrganizer, eventCategory,eventDetails,eventLatitude, eventLongitude;
+    TextView veventLabel,veventLocation,veventDate,veventOrganizer,veventCategory,veventId,veventDetails,attending;
+    Button attendingbutton;
+    String eventId, eventLabel, eventLocation, eventDate, eventOrganizer, eventCategory,eventDetails,eventLatitude, eventLongitude, username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +48,11 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
         veventCategory= (TextView) findViewById(R.id.deventCategory);
         veventId= (TextView) findViewById(R.id.deventId);
         veventDetails= (TextView) findViewById(R.id.deventDetails);
+        attendingbutton=(Button) findViewById(R.id.going);
+        attending=(TextView) findViewById(R.id.attend);
 
         Intent intent = getIntent();
+        username=intent.getStringExtra("username");
         eventId=intent.getStringExtra("eventId");
         eventLabel=intent.getStringExtra("eventLabel");
         eventLocation=intent.getStringExtra("eventLocation");
@@ -77,6 +84,47 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
         i.putExtra("longitude",eventLongitude);
         startActivity(i);
 
+    }
+
+    public void attendingevents(View view)
+    {
+        attendingbutton.setVisibility(View.GONE);
+        attending.setVisibility(View.GONE);
+        Response.Listener<String> responselistener= new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                try {
+
+                    JSONObject jsonObject=new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    if(success){
+                        Log.e(STRING_TAG,"insideSuccess");
+                        String toastMesg = "See you there.";
+                        Toast toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
+                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                        if (v != null) v.setGravity(Gravity.CENTER);
+                        toast.show();
+                    }
+                    else {
+                        AlertDialog.Builder builder= new AlertDialog.Builder(EventDetails.this);
+                        builder.setMessage("Connection Failed")
+                                .setNegativeButton("Retry",null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        if(checkConnection(this)){
+            AttendingEventRequest attendingEventRequest=new AttendingEventRequest(username, eventLabel ,responselistener);
+            RequestQueue queue = Volley.newRequestQueue(EventDetails.this);
+            queue.add(attendingEventRequest);
+        }
     }
 
 

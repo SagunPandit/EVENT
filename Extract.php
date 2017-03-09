@@ -8,6 +8,7 @@
     }
 
     $usernameorid=$_POST["username"];
+    $eventname=$_POST["eventname"];
     $check_code=$_POST["check"];						
     $response = array();
     $response["success"] = false;  
@@ -27,7 +28,22 @@
         return $inuser;
 
     }
-    
+    function geteventid()
+    {
+        global $connect, $eventname;
+        $statement= mysqli_prepare($connect,"SELECT upload_id FROM upload WHERE event_name=?");
+        mysqli_stmt_bind_param($statement, "s", $eventname);
+        mysqli_stmt_execute($statement);
+        mysqli_stmt_store_result($statement);
+        mysqli_stmt_bind_result($statement, $id);
+
+        while(mysqli_stmt_fetch($statement)){
+            $inuser= $id;
+        }
+        return $inuser;
+
+    }
+
     function getdetails()
     {
         global $connect, $usernameorid, $response;
@@ -99,6 +115,16 @@
         }
         mysqli_stmt_close($statement); 
         return $user_name;
+    }
+
+    function attendingevents($attendinguserid)
+    {
+        global $connect, $response,$eventname,$usernameorid;
+        $attendingeventid=geteventid();
+        $statement = mysqli_prepare($connect, "INSERT INTO attendingevents (event_id, user_id) VALUES (?, ?)");
+        mysqli_stmt_bind_param($statement, "ii",$attendingeventid,$attendinguserid);
+        mysqli_stmt_execute($statement);
+
     }
     
     function getall() {
@@ -264,6 +290,10 @@
         
         case "donations":
         gettypes("Donations");
+        break;
+
+        case "attending":
+        attendingevents(getid());
         break;
         
     	default:

@@ -534,6 +534,7 @@ public class EventRecyclerView {
                         Log.v("Count",String.valueOf(views));
                         listenerFunction(holder.eventLabel.getText().toString(),views,currentItem.context);
                         Intent intent=new Intent (currentItem.context,EventDetails.class);
+                        intent.putExtra("username",username);
                         intent.putExtra("eventId",holder.eventId.getText().toString());
                         intent.putExtra("eventLabel",holder.eventLabel.getText().toString());
                         intent.putExtra("eventLocation",holder.eventLocation.getText().toString());

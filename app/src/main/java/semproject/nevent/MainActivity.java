@@ -3,8 +3,11 @@ package semproject.nevent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
         setContentView(R.layout.activity_main);
 
         Log.e(STRING_TAG,"Check");
+
         if(checkConnection(this)){
             sharedpreferences = getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
             String username= sharedpreferences.getString("username","");

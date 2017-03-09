@@ -277,6 +277,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:id="@+id/going"
+            android:onClick="attendingevents"
             android:text="YES"
             android:background="@drawable/shape4"
             />
@@ -295,7 +297,7 @@
         android:background="#ffffff">
 
         <TextView
-            android:id="@+id/going"
+            android:id="@+id/goingnumber"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
