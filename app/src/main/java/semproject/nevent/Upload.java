@@ -67,7 +67,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
     private static final int RESULT_LOAD_IMAGE=1;
     public static String PreferenceFiles = "uploadsharedpreference";
     SharedPreferences sharedpreferences;
-    private static final int MAX_WIDTH=1024;
+    private static final int MAX_WIDTH=720;
     String encodedImage;
     double longitude, latitude;
     private static final String SERVER_ADDRESS="http://avashadhikari.com.np/";
