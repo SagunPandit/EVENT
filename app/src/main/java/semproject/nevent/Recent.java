@@ -41,6 +41,10 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
     List<String>eventCategory=new ArrayList<>();
     List<String>eventOrganizer=new ArrayList<>();
     List<Integer>viewcount=new ArrayList<>();
+    static public List<Double>latitude=new ArrayList<>();
+    static public List<Double>longitude=new ArrayList<>();
+    List<String>slatitude=new ArrayList<>();
+    List<String>slongitude=new ArrayList<>();
 
     public Recent() {
         staticeventRecyclerView=new EventRecyclerView();
@@ -102,6 +106,8 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                         JSONArray jsonArray5 = jsonObject.getJSONArray("event_organizer");
                         JSONArray jsonArray6 = jsonObject.getJSONArray("event_id");
                         JSONArray jsonArray7 = jsonObject.getJSONArray("viewcount");
+                        JSONArray jsonArray8 = jsonObject.getJSONArray("latitude");
+                        JSONArray jsonArray9 = jsonObject.getJSONArray("longitude");
                         if (jsonArray != null) {
                             int len = jsonArray.length();
                             Log.e(STRING_TAG,Integer.toString(len));
@@ -132,6 +138,27 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                             //for count
                             for (int i=0;i<len;i++){
                                 viewcount.add((Integer) jsonArray7.get(i));
+                            }
+                            //for longitude
+                            for (int i=0;i<len;i++){
+                                try{
+                                    longitude.add(Double.parseDouble(jsonArray8.get(i).toString()));
+                                }
+                                catch (NumberFormatException e)
+                                {
+                                    longitude.add(1.00000);
+                                }
+
+                            }
+                            //for latitude
+                            for (int i=0;i<len;i++){
+                                try{
+                                    latitude.add(Double.parseDouble(jsonArray9.get(i).toString()));
+                                }
+                                catch (NumberFormatException e)
+                                {
+                                    latitude.add(1.00000);
+                                }
                             }
 
                             retreiveFromDatabase(mRecyclerView, getContext());

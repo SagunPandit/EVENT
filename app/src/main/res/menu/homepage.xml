@@ -6,7 +6,11 @@
         android:icon="@drawable/search"
         myapp:showAsAction="always|collapseActionView"
         myapp:actionViewClass="android.support.v7.widget.SearchView" />
-
+    <item android:id="@+id/action_location"
+        android:title="NearBy"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        myapp:showAsAction="always"
+        myapp:actionViewClass="android.support.v7.widget.Button"/>
 </menu>
 
 
