@@ -33,7 +33,7 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
     String STRING_TAG="EventDetails";
     private static final String SERVER_ADDRESS="http://avashadhikari.com.np/";
     ImageView downloadedimage;
-    TextView veventLabel,veventLocation,veventDate,veventOrganizer,veventCategory,veventId,veventDetails,attending;
+    TextView veventLabel,veventLocation,veventDate,veventOrganizer,veventCategory,veventId,veventDetails,attendingtext, participantnumber;
     Button attendingbutton;
     String eventId, eventLabel, eventLocation, eventDate, eventOrganizer, eventCategory,eventDetails,eventLatitude, eventLongitude, username;
     @Override
@@ -49,7 +49,8 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
         veventId= (TextView) findViewById(R.id.deventId);
         veventDetails= (TextView) findViewById(R.id.deventDetails);
         attendingbutton=(Button) findViewById(R.id.going);
-        attending=(TextView) findViewById(R.id.attend);
+        attendingtext=(TextView) findViewById(R.id.attend);
+        participantnumber=(TextView) findViewById(R.id.goingnumber);
 
         Intent intent = getIntent();
         username=intent.getStringExtra("username");
@@ -59,7 +60,8 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
         eventDate=intent.getStringExtra("eventDate");
         eventOrganizer=intent.getStringExtra("eventOrganizer");
         eventCategory=intent.getStringExtra("eventCategory");
-        listenerFunction(eventId);
+        listenerFunction();
+        checkgoing();
         downloadedimage=(ImageView) findViewById(R.id.detaildownloadedimage);
         new Downloadimage(eventLabel).execute();
         setvalues();
@@ -76,6 +78,7 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
     }
     //String eventId,String eventLabel,String eventLocation,String eventDate,String eventOrganizer,String eventCategory
 
+
     public void showlocation(View view)
     {
         Intent i= new Intent(this,ShowLocation.class);
@@ -89,7 +92,7 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
     public void attendingevents(View view)
     {
         attendingbutton.setVisibility(View.GONE);
-        attending.setVisibility(View.GONE);
+        attendingtext.setVisibility(View.GONE);
         Response.Listener<String> responselistener= new Response.Listener<String>()
         {
             @Override
@@ -99,13 +102,16 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
 
                     JSONObject jsonObject=new JSONObject(response);
                     boolean success = jsonObject.getBoolean("success");
+                    String number= Integer.toString(jsonObject.getInt("participants"));
                     if(success){
+                        participantnumber.setText(number);
                         Log.e(STRING_TAG,"insideSuccess");
                         String toastMesg = "See you there.";
                         Toast toast = Toast.makeText(getApplicationContext(), toastMesg, Toast.LENGTH_SHORT);
                         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                         if (v != null) v.setGravity(Gravity.CENTER);
                         toast.show();
+
                     }
                     else {
                         AlertDialog.Builder builder= new AlertDialog.Builder(EventDetails.this);
@@ -121,14 +127,52 @@ public class EventDetails extends AppCompatActivity implements ConnectivityRecei
             }
         };
         if(checkConnection(this)){
-            AttendingEventRequest attendingEventRequest=new AttendingEventRequest(username, eventLabel ,responselistener);
+            AttendingEventRequest attendingEventRequest=new AttendingEventRequest(username, eventId ,responselistener);
             RequestQueue queue = Volley.newRequestQueue(EventDetails.this);
             queue.add(attendingEventRequest);
         }
     }
 
+    public void checkgoing(){
+        Response.Listener<String> responselistener= new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                try {
 
-    public void listenerFunction(String eventId){
+                    JSONObject jsonObject=new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    boolean going= jsonObject.getBoolean("going");
+                    String number= Integer.toString(jsonObject.getInt("participants"));
+                    if(success){
+                        if(going){
+                            attendingbutton.setVisibility(View.GONE);
+                            attendingtext.setVisibility(View.GONE);
+                        }
+                        participantnumber.setText(number);
+
+                    }
+                    else {
+                        AlertDialog.Builder builder= new AlertDialog.Builder(EventDetails.this);
+                        builder.setMessage("Connection Failed")
+                                .setNegativeButton("Retry",null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        if(checkConnection(this)){
+            ParticipantRequest participantRequest=new ParticipantRequest(username, eventId ,responselistener);
+            RequestQueue queue = Volley.newRequestQueue(EventDetails.this);
+            queue.add(participantRequest);
+        }
+    }
+    public void listenerFunction(){
         Log.e(STRING_TAG,"insideListiner");
         Response.Listener<String> responseListener= new Response.Listener<String>() {
             @Override
