@@ -251,12 +251,74 @@
 
     </View>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/buttons"
+        android:layout_below="@id/dlinear3"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="#ffffff">
+
+        <TextView
+            android:id="@+id/attend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:gravity="center"
+            android:text="Are You Attending ?"
+            android:textStyle="bold"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="YES"
+            android:background="@drawable/shape4"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/attending"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#ffffff">
+
+        <TextView
+            android:id="@+id/going"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="Going"
+            android:paddingLeft="120dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:text=" are attending the event"/>
+
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/dlinear4"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:layout_below="@id/dlinear3"
+       android:layout_below="@id/attending"
        android:layout_marginTop="20dp"
         android:background="#ffffff"
         android:layout_marginRight="10dp"
