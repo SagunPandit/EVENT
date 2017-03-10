@@ -281,7 +281,8 @@
             android:onClick="attendingevents"
             android:text="YES"
             android:background="@drawable/shape4"
-            />
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"           />
 
 
     </LinearLayout>
