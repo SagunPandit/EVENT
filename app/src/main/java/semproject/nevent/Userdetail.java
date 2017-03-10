@@ -32,6 +32,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static semproject.nevent.MainActivity.PreferenceFile;
@@ -48,7 +50,6 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
     SharedPreferences sharedpreferences;
     private RecyclerView mRecyclerView;
     String username;
-    EventRecyclerView eventRecyclerView = new EventRecyclerView();
     List<String> eventList=new ArrayList<>();
     List<String>eventLocation=new ArrayList<>();
     List<String>eventDate=new ArrayList<>();
@@ -90,7 +91,7 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
             public void onClick(View v) {
                 if(display){
                     if(checkConnection(getContext())){
-                        userListener(username);
+                        userListener(true);
                     }
                     userevents.setVisibility(View.GONE);
                     display=false;
@@ -99,6 +100,15 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
             }
         });
 
+        Button goingevents=(Button) rootView.findViewById(R.id.goingevents);
+        goingevents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkConnection(getContext())){
+                    userListener(false);
+                }
+            }
+        });
         Button userlogout=(Button) rootView.findViewById(R.id.userlogout);
         userlogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,71 +124,101 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
                 }
             }
         });
+
         return rootView;
     }
 
 
 
-    public void retreiveFromDatabase(EventRecyclerView eventRecyclerView,RecyclerView mRecyclerView,Context context){
+    public void retreiveFromDatabase(boolean ownEvents){
         Log.e(STRING_TAG,"database");
-        if(checkConnection(context)){
-            for (int i=0;i < eventList.size();i++)
-            {
-                Log.i("Value of element "+i,eventList.get(i));
-                eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),context);
-                RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(context, eventRecyclerView.getItem());
-                mRecyclerView.setAdapter(mAdapter);
+        Log.e(STRING_TAG, Integer.toString(eventList.size()));
+        EventRecyclerView eventRecyclerView = new EventRecyclerView();
+        if(checkConnection(getContext())){
+            if(ownEvents){
+                for (int i=0;i < eventList.size();i++)
+                {
+
+                    Log.i("Value of element "+i,eventList.get(i));
+                    eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),getContext());
+                    RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(getContext(), eventRecyclerView.getItem());
+                    mRecyclerView.setAdapter(mAdapter);
+                }
             }
+            else {
+                for (int i=0;i < eventList.size();i++)
+                {
+                    Log.i("Value of element "+i,eventList.get(i));
+                    eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),getContext());
+                    RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(getContext(), eventRecyclerView.getItem(),username);
+                    mRecyclerView.setAdapter(mAdapter);
+                }
+            }
+
         }
 
     }
 
-    public void userListener(String username){
+    public void userListener(final boolean ownEvents){
         Log.e(STRING_TAG,"insideListiner");
+        eventLocation=new ArrayList<>();
+        eventList=new ArrayList<>();
+        eventId=new ArrayList<>();
+        eventDate=new ArrayList<>();
+        eventCategory=new ArrayList<>();
+        viewcount=new ArrayList<>();
         Response.Listener<String> responseListener= new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     Log.e(STRING_TAG,"try");
                     JSONObject jsonObject=new JSONObject(response);
-                    boolean success = jsonObject.getBoolean("success");
+                    boolean success = jsonObject.getBoolean("success1");
                     if(success){
                         Log.e(STRING_TAG,"insideSuccess");
-                        JSONArray jsonArray = jsonObject.getJSONArray("event_name");
-                        JSONArray jsonArray2 = jsonObject.getJSONArray("location_name");
-                        JSONArray jsonArray3 = jsonObject.getJSONArray("event_date");
-                        JSONArray jsonArray4 = jsonObject.getJSONArray("event_category");
-                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_id");
-                        JSONArray jsonArray7 = jsonObject.getJSONArray("viewcount");
+                        JSONArray jsonArray = jsonObject.getJSONArray("event_name1");
+                        JSONArray jsonArray2 = jsonObject.getJSONArray("location_name1");
+                        JSONArray jsonArray3 = jsonObject.getJSONArray("event_date1");
+                        JSONArray jsonArray4 = jsonObject.getJSONArray("event_category1");
+                        JSONArray jsonArray5 = jsonObject.getJSONArray("event_id1");
+                        JSONArray jsonArray7 = jsonObject.getJSONArray("viewcount1");
+
+                        int count= jsonObject.getInt("count1");
+                        Log.e(STRING_TAG + "count",Integer.toString(count));
                         if (jsonArray != null) {
                             int len = jsonArray.length();
-                            Log.e(STRING_TAG,Integer.toString(len));
+                            Log.e(STRING_TAG + "len",Integer.toString(len));
                             //for eventid
                             for (int i=0;i<len;i++){
                                 eventId.add(jsonArray5.get(i).toString());
                             }
+
                             //for eventname
                             for (int i=0;i<len;i++){
                                 eventList.add(jsonArray.get(i).toString());
                             }
+
                             //for eventlocation
                             for (int i=0;i<len;i++){
                                 eventLocation.add(jsonArray2.get(i).toString());
                             }
+
                             //for eventdate
                             for (int i=0;i<len;i++){
                                 eventDate.add(jsonArray3.get(i).toString());
                             }
+
                             //for eventcategory
                             for (int i=0;i<len;i++){
                                 eventCategory.add(jsonArray4.get(i).toString());
                             }
+
                             //for count
                             for (int i=0;i<len;i++){
-                                viewcount.add((Integer) jsonArray7.get(i));
+                                int value=(Integer) jsonArray7.get(i);
+                                viewcount.add(value);
                             }
-
-                            retreiveFromDatabase(eventRecyclerView, mRecyclerView, getContext());
+                            retreiveFromDatabase(ownEvents);
                         }
                         else
                             Log.e(STRING_TAG,"insideNull");
@@ -197,12 +237,21 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
             }
         };
         if(checkConnection(getContext())){
-            RecyclerRequest recyclerRequest=new RecyclerRequest(username,"own",responseListener);
-            RequestQueue queue = Volley.newRequestQueue(getContext());
-            queue.add(recyclerRequest);
+            if(ownEvents)
+            {   Log.e(STRING_TAG+" lkasdkf",Boolean.toString(ownEvents));
+                RecyclerRequest recyclerRequest=new RecyclerRequest(username,"own",responseListener);
+                RequestQueue queue = Volley.newRequestQueue(getContext());
+                queue.add(recyclerRequest);
+            }
+            else {
+                Log.e(STRING_TAG+" ajf;lkd",Boolean.toString(ownEvents));
+                RecyclerRequest recyclerRequest=new RecyclerRequest(username,"getgoing",responseListener);
+                RequestQueue queue = Volley.newRequestQueue(getContext());
+                queue.add(recyclerRequest);
+            }
+
         }
     }
-
     //For retrieving the image of user.
     private class Downloadimage extends AsyncTask<Void, Void, Bitmap>
     {

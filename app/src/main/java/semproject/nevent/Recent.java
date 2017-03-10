@@ -142,7 +142,7 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                             //for longitude
                             for (int i=0;i<len;i++){
                                 try{
-                                    longitude.add(Double.parseDouble(jsonArray8.get(i).toString()));
+                                    longitude.add(Double.parseDouble(jsonArray9.get(i).toString()));
                                 }
                                 catch (NumberFormatException e)
                                 {
@@ -153,7 +153,7 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                             //for latitude
                             for (int i=0;i<len;i++){
                                 try{
-                                    latitude.add(Double.parseDouble(jsonArray9.get(i).toString()));
+                                    latitude.add(Double.parseDouble(jsonArray8.get(i).toString()));
                                 }
                                 catch (NumberFormatException e)
                                 {
