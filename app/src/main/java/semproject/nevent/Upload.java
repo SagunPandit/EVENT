@@ -77,6 +77,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
     ImageView imagetoupload;
     public static String eventdate="";
     DatePickerFragment datePickerFragment;
+    int id=1;
 
 
     @Override
@@ -135,6 +136,7 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
         editor.apply();
 
         Intent intent= new Intent(this,NMapsActivity.class);
+        finish();
         startActivity(intent);
 
     }
@@ -251,6 +253,8 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
                                     toast.show();
                                     Intent intent = new Intent(Upload.this, HomePage.class);
                                     intent.putExtra("username", username);
+
+                                    intent.putExtra("id",id);
                                     sharedpreferences = getSharedPreferences(PreferenceFiles, Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
                                     editor.clear();
@@ -259,8 +263,9 @@ public class Upload extends AppCompatActivity implements ConnectivityReceiver.Co
                                     Log.e("Stringdoublelongitude", Double.toString(longitude));
                                     Log.d("NORMALlatitude", "value" + latitude);
                                     Log.d("NORMALlongitude", "value" + longitude);
-                                    startActivity(intent);
                                     finish();
+                                    startActivity(intent);
+
 
                                     break;
 

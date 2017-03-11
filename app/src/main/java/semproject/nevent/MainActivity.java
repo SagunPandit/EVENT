@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
     final String STRING_TAG = "MainActivity";
     public static String PreferenceFile = "neventpreff" ;
     SharedPreferences sharedpreferences;
+    int id=1;
 
 
     @Override
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements ConnectivityRecei
                         Intent intent= new Intent(MainActivity.this,HomePage.class);
                         intent.putExtra("username",username);
                         intent.putExtra("email",email);
+                        intent.putExtra("id",id);
                         startActivity(intent);
                         finish();
                     }

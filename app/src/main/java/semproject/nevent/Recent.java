@@ -46,6 +46,17 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
     List<String>slatitude=new ArrayList<>();
     List<String>slongitude=new ArrayList<>();
 
+    public static List<String> extracteventId=new ArrayList<>();
+    public static List<String>extracteventList=new ArrayList<>();
+    public static List<String>extracteventLocation=new ArrayList<>();
+    public static List<String>extracteventDate=new ArrayList<>();
+    public static List<String>extracteventCategory=new ArrayList<>();
+    public static List<String>extracteventOrganizer=new ArrayList<>();
+    public static List<Integer>extractviewcount=new ArrayList<>();
+    public static List<Double>extractlatitude=new ArrayList<>();
+    public static List<Double>extractlongitude=new ArrayList<>();
+
+
     public Recent() {
         staticeventRecyclerView=new EventRecyclerView();
         staticadapter=new EventRecyclerView.AllItemAdapter();
@@ -56,6 +67,8 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         username = getArguments().getString("username");
+        latitude=new ArrayList<>();
+        longitude=new ArrayList<>();
         View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
 
         // BEGIN_INCLUDE(initializeRecyclerView)
@@ -80,8 +93,8 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
             for (int i=0;i < eventList.size();i++)
             {
                 Log.i("Value of element "+i,eventList.get(i));
-                staticeventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context);
-                staticadapter = new EventRecyclerView.AllItemAdapter(context, staticeventRecyclerView.getItem(),username);
+                staticeventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),eventOrganizer.get(i),viewcount.get(i),context,0);
+                staticadapter = new EventRecyclerView.AllItemAdapter(context, staticeventRecyclerView.getItem(),username,false);
                 mRecyclerView.setAdapter(staticadapter);
             }
         }
@@ -89,6 +102,15 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
     }
 
     public void listenerFunction(String username){
+        extracteventId=new ArrayList<>();
+        extracteventList=new ArrayList<>();
+        extracteventLocation=new ArrayList<>();
+        extracteventDate=new ArrayList<>();
+        extracteventCategory=new ArrayList<>();
+        extracteventOrganizer=new ArrayList<>();
+        extractviewcount=new ArrayList<>();
+        extractlatitude=new ArrayList<>();
+        extractlongitude=new ArrayList<>();
         Log.e(STRING_TAG,"insideListiner");
         Response.Listener<String> responseListener= new Response.Listener<String>() {
             @Override
@@ -114,39 +136,48 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                             //for eventId
                             for (int i=0;i<len;i++){
                                 eventId.add(jsonArray6.get(i).toString());
+                                extracteventId.add(jsonArray6.get(i).toString());
                             }
                             //for eventname
                             for (int i=0;i<len;i++){
                                 eventList.add(jsonArray.get(i).toString());
+                                extracteventList.add(jsonArray.get(i).toString());
                             }
                             //for eventlocation
                             for (int i=0;i<len;i++){
                                 eventLocation.add(jsonArray2.get(i).toString());
+                                extracteventLocation.add(jsonArray2.get(i).toString());
                             }
                             //for eventdate
                             for (int i=0;i<len;i++){
                                 eventDate.add(jsonArray3.get(i).toString());
+                                extracteventDate.add(jsonArray3.get(i).toString());
                             }
                             //for eventcategory
                             for (int i=0;i<len;i++){
                                 eventCategory.add(jsonArray4.get(i).toString());
+                                extracteventCategory.add(jsonArray4.get(i).toString());
                             }
                             //for eventorganizer
                             for (int i=0;i<len;i++){
                                 eventOrganizer.add(jsonArray5.get(i).toString());
+                                extracteventOrganizer.add(jsonArray5.get(i).toString());
                             }
                             //for count
                             for (int i=0;i<len;i++){
                                 viewcount.add((Integer) jsonArray7.get(i));
+                                extractviewcount.add((Integer) jsonArray7.get(i));
                             }
                             //for longitude
                             for (int i=0;i<len;i++){
                                 try{
                                     longitude.add(Double.parseDouble(jsonArray9.get(i).toString()));
+                                    extractlongitude.add(Double.parseDouble(jsonArray9.get(i).toString()));
                                 }
                                 catch (NumberFormatException e)
                                 {
                                     longitude.add(1.00000);
+                                    extractlongitude.add(1.00000);
                                 }
 
                             }
@@ -154,10 +185,12 @@ public class Recent extends Fragment implements ConnectivityReceiver.Connectivit
                             for (int i=0;i<len;i++){
                                 try{
                                     latitude.add(Double.parseDouble(jsonArray8.get(i).toString()));
+                                    extractlatitude.add(Double.parseDouble(jsonArray8.get(i).toString()));
                                 }
                                 catch (NumberFormatException e)
                                 {
                                     latitude.add(1.00000);
+                                    extractlatitude.add(1.00000);
                                 }
                             }
 

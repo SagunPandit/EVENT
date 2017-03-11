@@ -89,6 +89,7 @@ public class NMapsActivity extends FragmentActivity implements OnMapReadyCallbac
                     Intent i = new Intent(NMapsActivity.this, Upload.class);
                     i.putExtra("longitude",longitude);
                     i.putExtra("latitude",latitude);
+                    finish();
                     startActivity(i);
 
                 }else{

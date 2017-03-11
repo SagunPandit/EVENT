@@ -1,6 +1,7 @@
 package semproject.nevent;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,6 +30,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static semproject.nevent.Recent.latitude;
 import static semproject.nevent.Recent.longitude;
 
@@ -37,12 +42,26 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
     private GoogleApiClient client;
     private boolean mRequestingLocationUpdates = true;
     private LocationRequest mLocationRequest;
+    static public List<Double> la=new ArrayList<>();
+    static public List<Double> ln=new ArrayList<>();
+    static public List<Float> distance=new ArrayList<>();
+
+/*    double[] la;
+    double[] ln;*/
+    /*float[] distance=null;*/
+    String username;
+    int id=2;
+
     Location mLastLocation,mCurrentLocation;
+
+    public ShowEvents(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_events);
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -114,8 +133,8 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
 
     {
         mMap.moveCamera(CameraUpdateFactory
-                .newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getAltitude()), 14.0f));            ;
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f), 2000, null);
+                .newLatLngZoom(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), 9.0f));            ;
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(14.0f), 2000, null);
         LatLng pos= new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         Log.e("current",mCurrentLocation.toString());
         Log.d("current long","value"+mCurrentLocation.getLatitude());
@@ -123,9 +142,6 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
 
         int i=0;
         Double longs;
-        Double[] la= null;
-        Double[] ln= null;
-        float[] distance=null;
 
 
 
@@ -134,39 +150,66 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
                 .radius(5000)
                 .strokeColor(Color.rgb(0, 136, 255))
                 .fillColor(Color.argb(20, 0, 136, 255)));
-
+        la=new ArrayList<>();
+        ln=new ArrayList<>();
         for (double lat:latitude) {
-            Log.e("Location lat"+"number "+Integer.toString(i),Double.toString(lat));
+
             longs = longitude.get(i);
-            Log.e("Location long",Double.toString(lat));
-            i++;
-            LatLng latlang = new LatLng(lat, longs);
-            Marker marker = mMap.addMarker(
-                    new MarkerOptions()
-                            .position(latlang)
-                            .visible(false));
+
+
+            //mMap.addMarker(new MarkerOptions().position(Mark).title(EventName));
+            LatLng latlang = new LatLng(lat,longs);
+
             float results[] = new float[1];
 
             Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(),
                     latlang.latitude, latlang.longitude,
                     results);
-            if (results[0] < 50000) {
-                marker.setVisible(true);
-                if (la != null) {
-                    la[i]=lat;
-                }
-                if (ln != null) {
-                    ln[i]=longs;
-                }
-                if (distance != null) {
-                    distance[i]=results[0];
-                }
+            if (results[0] < 5000)
+            {
+
+                Log.d("current long","value"+latlang.latitude);
+                Log.e("inside","5 km");
+                mMap.addMarker(new MarkerOptions().position(latlang));
+
+
+                    la.add(lat);
+                    Log.e("Show",Double.toString(lat));
+                    ln.add(longs);
+
+
+                    distance.add(results[0]);
 
             }
+            i++;
+        }
+        for(double l:latitude){
+            Log.e("staticextract",Double.toString(l));
         }
 
 
     }
+
+   /* public List<Double> getLa() {
+        Log.e("Getlatitude","inside");
+        if(la.isEmpty())
+            Log.e("Getlatitude","inside null");
+
+        return la;
+    }
+
+    public List<Float> getDistance() {
+        return distance;
+    }
+
+
+
+    public List<Double> getLn() {
+        for(double longs:ln){
+            Log.e("GetLongitude",Double.toString(longs));
+        }
+        return ln;
+    }*/
 
 
 /*    public void ShowNearbyEvents()
@@ -251,14 +294,14 @@ private void drawMap(LatLng latLng, List<LatLng> positions) {
                         CameraUpdateFactory.newCameraPosition(myPosition));*/
 
                 //this conditon is removed in the onLocaitonChanged Method
-                if (cameraPosition.zoom < 7.0f) {
+             /*   if (cameraPosition.zoom < 7.0f) {
 
 
                     mMap.moveCamera(CameraUpdateFactory
                             .newLatLngZoom(new LatLng(27.7172, 85.3240), 14.0f));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f), 2000, null);
 
-                }
+                }*/
 
 
             }
@@ -355,5 +398,18 @@ private void drawMap(LatLng latLng, List<LatLng> positions) {
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 client, mLocationRequest, this);
         Toast.makeText(this, "Request", Toast.LENGTH_SHORT).show();
+    }
+
+    public void nearbylistbutton(View view)
+    {
+        mMap.clear();
+        Intent intent= new Intent(this,HomePage.class);
+        intent.putExtra("id",id);
+        intent.putExtra("username",username);
+       /* intent.putExtra("latitude",la);
+        intent.putExtra("longitude",ln);
+        intent.putExtra("distance",distance);*/
+        finish();
+        startActivity(intent);
     }
 }

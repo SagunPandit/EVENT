@@ -45,14 +45,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static semproject.nevent.ShowEvents.la;
+import static semproject.nevent.ShowEvents.ln;
+
 public class HomePage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,ConnectivityReceiver.ConnectivityReceiverListener,SearchView.OnQueryTextListener {
     final String STRING_TAG= "HomePage";
     NavigationView navigationView=null;
     Toolbar toolbar=null;
     String username;
     Context context;
+    int id;
     static EventRecyclerView staticeventRecyclerView = new EventRecyclerView();
     static EventRecyclerView.AllItemAdapter staticadapter=new EventRecyclerView.AllItemAdapter();
+    static ShowEvents showEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,38 +67,31 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
             Intent intent = getIntent();
             username = intent.getStringExtra("username");
+            id=intent.getIntExtra("id",3);
             Button userbutton=(Button)findViewById(R.id.user_button);
             userbutton.setText(username);
-/*
 
-            RecyclerView.LayoutManager mLayoutManager;
-            mRecyclerView = (RecyclerView) findViewById(R.id.all_recycler_view);
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            if (mRecyclerView != null) {
-                mRecyclerView.setHasFixedSize(true);
+            if (id==1)
+            {
+                Recent recent = new Recent();
+                Bundle bundle = new Bundle();
+                bundle.putString("username", username);
+                bundle.putInt("id",id);
+                android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, recent);
+                recent.setArguments(bundle);
+                fragmentTransaction.commit();
             }
-            // use a linear layout manager
-            mLayoutManager = new LinearLayoutManager(this);
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            listenerFunction(username);*/
-
-            Recent recent=new Recent();
-            Bundle bundle = new Bundle();
-            bundle.putString("username", username);
-            android.support.v4.app.FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, recent);
-            recent.setArguments(bundle);
-            fragmentTransaction.commit();
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            else if(id==2)
+            {
+                NearByList nearByList = new NearByList();
+                Bundle bundle = new Bundle();
+                bundle.putString("username", username);
+                android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, nearByList);
+                nearByList.setArguments(bundle);
+                fragmentTransaction.commit();
             }
-        });*/
             toolbar = (Toolbar) findViewById(R.id.toolbar);
              setSupportActionBar(toolbar);
              getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -139,9 +137,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_location:
+                showEvents=new ShowEvents();
                 Intent intent=new Intent(this, ShowEvents.class);
                 intent.putExtra("username",username);
+                finish();
                 startActivity(intent);
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -285,6 +286,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         if(checkConnection(this)){
             Intent i=new Intent(this, Upload.class);
             i.putExtra("username",username);
+            finish();
             startActivity(i);
         }
 
