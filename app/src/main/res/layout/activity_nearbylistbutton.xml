@@ -19,7 +19,8 @@
             android:layout_height="match_parent"
             android:id="@+id/nearbylist"
             android:layout_weight="1"
-            android:onClick="nearbylistbutton"/>
+            android:onClick="nearbylistbutton"
+            android:background="@drawable/shape4"/>
 
 
 

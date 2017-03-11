@@ -11,7 +11,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/linear4"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
              android:layout_width="match_parent"
@@ -26,7 +29,8 @@
                         android:layout_height="150sp"
                         android:adjustViewBounds="true"
                         android:layout_centerInParent="true"
-                        android:id="@+id/profileimage"/>
+                        android:id="@+id/profileimage"
+                        android:layout_marginBottom="10dp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -38,7 +42,8 @@
                         android:layout_width="wrap_content"
                         android:layout_weight="0.5"
                         android:layout_height="wrap_content"
-                        android:id="@+id/user_name"/>
+                        android:id="@+id/user_name"
+                        android:textStyle="bold"/>
                 </LinearLayout>
         </LinearLayout>
 
@@ -53,7 +58,11 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="YourEvents"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:background="@drawable/yourevents"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
 
             <Button
                 android:id="@+id/goingevents"
@@ -61,15 +70,21 @@
                 android:layout_weight="1.2"
                 android:layout_height="wrap_content"
                 android:text="Going Events"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/shape4"/>
 
             <Button
                 android:id="@+id/userlogout"
                 android:layout_width="0dp"
                 android:layout_weight=".8"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_height="wrap_content"
                 android:text="Logout"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:background="@drawable/logout"/>
         </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
