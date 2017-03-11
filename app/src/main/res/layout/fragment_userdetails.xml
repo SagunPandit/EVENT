@@ -46,20 +46,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
             <Button
                 android:id="@+id/userevents"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="YourEvents"
                 android:gravity="center"/>
 
             <Button
+                android:id="@+id/goingevents"
+                android:layout_width="0dp"
+                android:layout_weight="1.2"
+                android:layout_height="wrap_content"
+                android:text="Going Events"
+                android:gravity="center"/>
+
+            <Button
                 android:id="@+id/userlogout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight=".8"
                 android:layout_height="wrap_content"
                 android:text="Logout"
                 android:gravity="center"/>
+        </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -69,9 +80,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
-
-
-        </LinearLayout>
 
     </LinearLayout>
 
