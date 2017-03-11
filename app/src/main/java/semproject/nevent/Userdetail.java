@@ -105,6 +105,7 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
             @Override
             public void onClick(View v) {
                 if(checkConnection(getContext())){
+                    userevents.setVisibility(View.VISIBLE);
                     userListener(false);
                 }
             }
@@ -140,7 +141,7 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
                 {
 
                     Log.i("Value of element "+i,eventList.get(i));
-                    eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),getContext());
+                    eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),getContext(),0);
                     RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(getContext(), eventRecyclerView.getItem());
                     mRecyclerView.setAdapter(mAdapter);
                 }
@@ -149,8 +150,8 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
                 for (int i=0;i < eventList.size();i++)
                 {
                     Log.i("Value of element "+i,eventList.get(i));
-                    eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),getContext());
-                    RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(getContext(), eventRecyclerView.getItem(),username);
+                    eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),getContext(),0);
+                    RecyclerView.Adapter mAdapter = new EventRecyclerView.AllItemAdapter(getContext(), eventRecyclerView.getItem(),username,false);
                     mRecyclerView.setAdapter(mAdapter);
                 }
             }

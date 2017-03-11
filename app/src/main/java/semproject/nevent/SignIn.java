@@ -30,6 +30,7 @@ public class SignIn extends Activity implements ConnectivityReceiver.Connectivit
     SharedPreferences sharedpreferences;
     EditText username;
     EditText password;
+    int id=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +110,7 @@ public class SignIn extends Activity implements ConnectivityReceiver.Connectivit
                         Intent intent= new Intent(SignIn.this,HomePage.class);
                         intent.putExtra("username",username);
                         intent.putExtra("email",email);
+                        intent.putExtra("id",id);
                         startActivity(intent);
                         finish();
                     }

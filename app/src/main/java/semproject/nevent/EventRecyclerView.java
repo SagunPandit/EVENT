@@ -63,8 +63,8 @@ public class EventRecyclerView {
 
     }
 
-    public void initializeData(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String organizer,Integer viewcount,Context context) {
-        items.add(new Item(eventid,eventname, eventcategory,eventlocation,eventdate,organizer,viewcount,context));
+    public void initializeData(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String organizer,Integer viewcount,Context context,float distance) {
+        items.add(new Item(eventid,eventname, eventcategory,eventlocation,eventdate,organizer,viewcount,context,distance));
         Log.e(STRING_TAG,eventname+" data initialized");
 
     }
@@ -78,8 +78,9 @@ public class EventRecyclerView {
         private String eventId,eventLocation,eventDate,eventOrganizer,eventCategory;
         private Context context;
         private int viewcount;
+        private float distance;
 
-        Item(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String eventOrganizer,Integer count,Context context) {
+        Item(String eventid,String eventname,String eventcategory,String eventlocation,String eventdate,String eventOrganizer,Integer count,Context context,float distance) {
             this.eventId=eventid;
             this.eventLabel=eventname;
             this.eventLocation=eventlocation;
@@ -87,6 +88,7 @@ public class EventRecyclerView {
             this.eventOrganizer=eventOrganizer;
             this.eventCategory=eventcategory;
             this.context=context;
+            this.distance=distance;
             viewcount=count;
         }
     }
@@ -442,17 +444,18 @@ public class EventRecyclerView {
         List<Item> items = Collections.emptyList();
         Item currentItem;
         String username;
-        private int check=10;
+        boolean check=false;
 
         public AllItemAdapter(){
            /* Log.e(STRING_TAG,Integer.toString(check));
             check++;*/
         }
         // Constructor to inflate layout of each item in RecyclerView
-        public AllItemAdapter(Context context, List<Item> items, String name) {
+        public AllItemAdapter(Context context, List<Item> items, String name, boolean check) {
             inflater = LayoutInflater.from(context);
             this.items = items;
             username=name;
+            this.check=check;
            /* Log.e(STRING_TAG,"itemadpter "+Integer.toString(check));*/
 
         }
@@ -559,6 +562,12 @@ public class EventRecyclerView {
                     }
                 });
             }
+            if(check){
+                String holderdistance=Float.toString(currentItem.distance);
+                holder.distancevalue.setText(holderdistance);
+                holder.distancetext.setVisibility(View.VISIBLE);
+                holder.distancevalue.setVisibility(View.VISIBLE);
+            }
             // click event handler when Item in RecyclerView is clicked
 
         }
@@ -656,6 +665,8 @@ public class EventRecyclerView {
             TextView eventView;
             ImageView downloadedimage;
             ImageButton eventDelete;
+            TextView distancetext;
+            TextView distancevalue;
 
             public AllItemViewHolder(View itemView) {
                 super(itemView);
@@ -669,6 +680,8 @@ public class EventRecyclerView {
                 eventView= (TextView) itemView.findViewById(R.id.alleventView);
                 eventDelete=(ImageButton) itemView.findViewById(R.id.alleventDelete);
                 downloadedimage=(ImageView) itemView.findViewById(R.id.alldownloadedimage);
+                distancetext=(TextView) itemView.findViewById(R.id.distanceid);
+                distancevalue=(TextView) itemView.findViewById(R.id.distancevalue);
 
             }
         }
