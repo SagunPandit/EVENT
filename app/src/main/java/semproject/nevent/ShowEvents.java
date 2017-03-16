@@ -33,6 +33,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static semproject.nevent.Recent.extracteventList;
+import static semproject.nevent.Recent.extractlatitude;
+import static semproject.nevent.Recent.extractlongitude;
 import static semproject.nevent.Recent.latitude;
 import static semproject.nevent.Recent.longitude;
 
@@ -44,6 +47,7 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
     private LocationRequest mLocationRequest;
     static public List<Double> la=new ArrayList<>();
     static public List<Double> ln=new ArrayList<>();
+    String eventname;
     static public List<Float> distance=new ArrayList<>();
 
 /*    double[] la;
@@ -141,6 +145,7 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
 
 
         int i=0;
+
         Double longs;
 
 
@@ -168,9 +173,18 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
             if (results[0] < 5000)
             {
 
+                    for(double lat2:extractlatitude)
+                    {
+
+                        if ((Double.compare(lat, lat2) == 0) && (Double.compare(longs, extractlongitude.get(i)) == 0))
+                        {
+
+                            eventname=extracteventList.get(i);
+                        }
+                    }
                 Log.d("current long","value"+latlang.latitude);
                 Log.e("inside","5 km");
-                mMap.addMarker(new MarkerOptions().position(latlang));
+                mMap.addMarker(new MarkerOptions().position(latlang).title(eventname));
 
 
                     la.add(lat);
@@ -182,9 +196,6 @@ public class ShowEvents extends FragmentActivity implements OnMapReadyCallback, 
 
             }
             i++;
-        }
-        for(double l:latitude){
-            Log.e("staticextract",Double.toString(l));
         }
 
 

@@ -84,10 +84,11 @@
 
         <activity
             android:name=".ShowEvents"
-            android:label="@string/title_activity_show_events"></activity>
+            android:label="@string/title_activity_show_events"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ShowLocation"
-            ></activity>
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
