@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/wall"
     tools:context="semproject.nevent.SignUp">
 
 <RelativeLayout
@@ -86,10 +87,12 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:text="Browse photo"
-        android:background="@android:color/holo_orange_dark"
+        android:background="@drawable/shape"
         android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:layout_margin="13dp"
         android:id="@+id/image"
         android:layout_below="@id/confpassword_register" />

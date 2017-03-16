@@ -73,7 +73,7 @@
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/shape4"/>
+                android:background="@drawable/yourevents"/>
 
             <Button
                 android:id="@+id/userlogout"
@@ -84,10 +84,11 @@
                 android:layout_height="wrap_content"
                 android:text="Logout"
                 android:gravity="center"
-                android:background="@drawable/logout"/>
+                android:background="@drawable/shape4"/>
         </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical"

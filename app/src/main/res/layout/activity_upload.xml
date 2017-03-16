@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/wall"
     tools:context="semproject.nevent.Upload">
 
 <RelativeLayout
@@ -17,6 +18,7 @@
     android:orientation="vertical">
 
     <EditText
+        android:background="@drawable/shape"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/event_name"
@@ -25,19 +27,22 @@
         android:layout_marginTop="11dp"/>
 
     <EditText
+        android:background="@drawable/shape"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/location"
         android:hint="Location"
+
         android:ems="10"
         android:layout_below="@id/event_name"
-        android:layout_marginTop="11dp"/>
+        android:layout_marginTop="13dp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="locationbutton"
         android:id="@+id/locationbutton"
         android:text="Add location"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/location"
         android:background="@drawable/shape2"
         android:padding="10dp"/>
@@ -77,15 +82,15 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="25dp"
         android:text="Browse photo"
+        android:background="@drawable/shape"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_margin="13dp"
         android:id="@+id/image"
-        android:background="#d43838"
-        android:padding="10dp"
-        android:textSize="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/details"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/details" />
     <ImageView
         android:layout_marginTop="10pt"
         android:layout_width="match_parent"

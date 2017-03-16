@@ -20,7 +20,7 @@
             android:id="@+id/nearbylist"
             android:layout_weight="1"
             android:onClick="nearbylistbutton"
-            android:background="@drawable/shape4"/>
+            android:background="@drawable/yourevents"/>
 
 
 
