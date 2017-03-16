@@ -29,6 +29,9 @@
             android:id="@+id/Bsearch"
             android:layout_weight="1"
             android:onClick="onSearch"
+            android:background="@drawable/yourevents"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
 
             />
 
@@ -39,8 +42,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:textSize="12sp"
             android:id="@+id/Bclear"
+            android:background="@drawable/logout"
             />
 
 

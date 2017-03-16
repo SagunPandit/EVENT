@@ -8,7 +8,7 @@
         myapp:actionViewClass="android.support.v7.widget.SearchView" />
     <item android:id="@+id/action_location"
         android:title="NearBy"
-        android:icon="@android:drawable/ic_menu_myplaces"
+        android:icon="@drawable/nearby"
         myapp:showAsAction="always"
         myapp:actionViewClass="android.support.v7.widget.Button"/>
 </menu>
