@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,6 +128,7 @@ public class EventRecyclerView {
     public static class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> implements ConnectivityReceiver.ConnectivityReceiverListener {
         String STRING_TAG= "ItemAdapter";
         String eventnamedelete;
+        String username;
         private static final String SERVER_ADDRESS="http://avashadhikari.com.np/";
         /* private instance variable to store Layout of each item. */
         private LayoutInflater inflater;
@@ -159,9 +161,10 @@ public class EventRecyclerView {
         }
 
         // Constructor to inflate layout of each item in RecyclerView
-        public ItemAdapter(Context context, List<Item> items) {
+        public ItemAdapter(Context context, List<Item> items,String name) {
             inflater = LayoutInflater.from(context);
             this.items = items;
+            this.username =name;
         }
 
         //create a view holder of items
@@ -215,6 +218,7 @@ public class EventRecyclerView {
                         intent.putExtra("eventDate",holder.eventDate.getText().toString());
                         intent.putExtra("eventCategory",holder.eventCategory.getText().toString());
                         intent.putExtra("eventOrganizer",holder.eventOrganizer.getText().toString());
+                        intent.putExtra("username",username);
                         currentItem.context.startActivity(intent);
                     }
 

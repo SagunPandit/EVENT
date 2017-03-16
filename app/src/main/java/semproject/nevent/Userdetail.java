@@ -89,13 +89,17 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
         userevents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(display){
+                if(checkConnection(getContext())){
+                    userListener(true);
+                }
+                /*if(display){
                     if(checkConnection(getContext())){
                         userListener(true);
                     }
-                    userevents.setVisibility(View.GONE);
+*//*                    userevents.setVisibility(View.GONE);
+                    userevents.setEnabled(true);*//*
                     display=false;
-                }
+                }*/
 
             }
         });
@@ -105,7 +109,7 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
             @Override
             public void onClick(View v) {
                 if(checkConnection(getContext())){
-                    userevents.setVisibility(View.VISIBLE);
+/*                    userevents.setVisibility(View.VISIBLE);*/
                     userListener(false);
                 }
             }
@@ -142,7 +146,7 @@ public class Userdetail extends Fragment implements ConnectivityReceiver.Connect
 
                     Log.i("Value of element "+i,eventList.get(i));
                     eventRecyclerView.initializeData(eventId.get(i),eventList.get(i),eventCategory.get(i),eventLocation.get(i),eventDate.get(i),username,viewcount.get(i),getContext(),0);
-                    RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(getContext(), eventRecyclerView.getItem());
+                    RecyclerView.Adapter mAdapter = new EventRecyclerView.ItemAdapter(getContext(), eventRecyclerView.getItem(),username);
                     mRecyclerView.setAdapter(mAdapter);
                 }
             }

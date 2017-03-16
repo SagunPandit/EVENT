@@ -54,11 +54,11 @@ public class Conference extends Fragment implements ConnectivityReceiver.Connect
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         username = getArguments().getString("username");
-        View rootView = inflater.inflate(R.layout.fragment_conference, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
 
         // BEGIN_INCLUDE(initializeRecyclerView)
         RecyclerView.LayoutManager mLayoutManager;
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.conference_recycler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_recycler_view);
         if (mRecyclerView != null) {
             mRecyclerView.setHasFixedSize(true);
         }
